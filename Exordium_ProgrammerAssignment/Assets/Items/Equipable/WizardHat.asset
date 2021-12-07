@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 113824578275be64c8c9a0370ad2c818, type: 3}
+  m_Name: WizardHat
+  m_EditorClassIdentifier: 
+  itemType: 0
+  usageType: 1
+  stackable: 0
+  equpment: 0
+  ItameName: Wizard Hat
+  amount: 0
+  Artwork: {fileID: 21300000, guid: b28311bcbf17b47458fddc96553ce9c8, type: 3}
+  PermanentManaIncrease: 20
+  PermanentHelthIncrease: 30
+  ReplenishMana: 0
+  ReplenishHelth: 0
+  Strenght: 0
+  Dexterity: 0
+  Agility: 0
+  Intelligence: 5
+  Attack: 6
+  Defence: 0
