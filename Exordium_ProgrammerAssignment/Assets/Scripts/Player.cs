@@ -41,7 +41,7 @@ public class Player : MonoBehaviour
         Inventory.SetActive(false);
         GameObject Atrtributes = GameObject.Find("Atrtributes").gameObject;
         Atrtributes.SetActive(false);
-        
+        Debug.Log("1");
     }
 
 
