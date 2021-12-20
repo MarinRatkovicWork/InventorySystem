@@ -88,11 +88,30 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnBeginDrag(PointerEventData data)
     {
-        imageItem = data.pointerDrag.gameObject.transform.Find("Image").gameObject;
-        imageItem.transform.SetParent(GameObject.Find("RightHolder").transform);
-        ItemImagePosition = imageItem.transform.position;
-        imageItem.transform.localScale = imageItem.transform.localScale * 2;
+        
+        //Issues: - Empty inventory and equipment slot can be dragged (with no effect) - it shouldn't be possible 
+        GameObject CurentSlot = data.pointerDrag.gameObject;
+       
+        if (CurentSlot.transform.childCount >0)
+        { 
+            GameObject GameObjectContainer = CurentSlot.transform.Find("GameObjectContainer").gameObject;
+            if (GameObjectContainer.transform.childCount > 0)
+            {
+                imageItem = data.pointerDrag.gameObject.transform.Find("Image").gameObject;
+                imageItem.transform.SetParent(GameObject.Find("RightHolder").transform);
+                ItemImagePosition = imageItem.transform.position;
+                imageItem.transform.localScale = imageItem.transform.localScale * 2;
 
+            }
+            else
+            {
+                data.pointerDrag = null;
+            }
+        }
+        else
+        {
+            data.pointerDrag = null;
+        }
 
     }
 
@@ -104,8 +123,8 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         imageItem.transform.SetSiblingIndex(2);
     }
     public void OnDrag(PointerEventData data)
-    {
-        imageItem.transform.position = Input.mousePosition;
+    {       
+            imageItem.transform.position = Input.mousePosition;       
     }
     public void OnDrop(PointerEventData data)
     {
@@ -369,20 +388,28 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     }
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Right)
+        if (eventData.pointerPress.gameObject.transform.childCount > 0)
         {
-            SwopEqupmentOnRightClik(eventData);
+            if (eventData.button == PointerEventData.InputButton.Right)
+            {
+
+                SwopEqupmentOnRightClik(eventData);
+            }
+            else
+            if (eventData.button == PointerEventData.InputButton.Middle)
+            {
+                ConsumeItem(eventData);
+            }
+            else if (Input.GetKey(KeyCode.Q) && eventData.button == PointerEventData.InputButton.Left)
+            {
+                Debug.Log("Radi");
+                DropToWorld(eventData.pointerPress.gameObject);
+
+            }
         }
         else
-        if (eventData.button == PointerEventData.InputButton.Middle)
         {
-            ConsumeItem(eventData);
-        }
-        else if (Input.GetKey(KeyCode.Q) && eventData.button == PointerEventData.InputButton.Left)
-        {
-            Debug.Log("Radi");
-            DropToWorld(eventData.pointerPress.gameObject);
-
+            eventData.pointerPress = null;
         }
     }
     private void SwopEqupmentOnRightClik(PointerEventData data)

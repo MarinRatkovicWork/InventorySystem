@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+//using IncludeCaracterStats;
 
 public class PlayerStats : MonoBehaviour
 {
+    //public ChracterStat Strenght;
 
     public Slider sliderHelth;
     public Slider sliderMana;
@@ -34,7 +36,7 @@ public class PlayerStats : MonoBehaviour
     public int MaxHelth;
     public int CurentHelth;
 
-    public int Strenght;
+    //public int Strenght;
     public int Dexterity;
     public int Agility;
     public int Intelligence;
