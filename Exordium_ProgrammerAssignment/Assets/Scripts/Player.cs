@@ -27,11 +27,11 @@ public class Player : MonoBehaviour
     public GameObject EquipmentPanel;
     public GameObject AttributesPanel;
     //ItemSpowner
-    public List<Items> items = new List<Items> ();
+    public List<Items> items = new List<Items>();
     public GameObject item;
 
     //
-    
+
 
     private void Awake()
     {
@@ -41,7 +41,6 @@ public class Player : MonoBehaviour
         Inventory.SetActive(false);
         GameObject Atrtributes = GameObject.Find("Atrtributes").gameObject;
         Atrtributes.SetActive(false);
-        Debug.Log("1");
     }
 
 
@@ -54,7 +53,7 @@ public class Player : MonoBehaviour
 
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
-        animator.SetFloat("Speed", movement.magnitude);       
+        animator.SetFloat("Speed", movement.magnitude);
         Schorcats();
     }
 
@@ -65,12 +64,12 @@ public class Player : MonoBehaviour
 
     private void Schorcats()
     {
-       
+
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             SpownItems();
-        }else
+        } else
 
         if (Input.GetKeyDown(KeyCode.I))
         {
@@ -97,14 +96,14 @@ public class Player : MonoBehaviour
                 EquipmentPanel.SetActive(true);
                 EquipmentButoon.SetActive(false);
             }
-        }else
+        } else
         if (Input.GetKeyDown(KeyCode.C))
         {
             if (AttributesPanel.active == true)
             {
                 AttributesPanel.SetActive(false);
                 AttributesButoon.SetActive(true);
-                
+
             }
             else
             {
@@ -114,302 +113,186 @@ public class Player : MonoBehaviour
         }
     }
 
-
-    private void OnTriggerEnter2D(Collider2D collider)
+    private void CheckNumberOfSlots()
     {
-        
         for (int i = 0; i < ItemSlotContanier.transform.childCount; i++)
         {
             Slots.Add(ItemSlotContanier.transform.GetChild(i).gameObject);
         }
+    }
 
-        bool Equip = false;
-
-        if (collider.gameObject.GetComponent<ItemControl>().itemData.itemType == Items.ItemType.PickUpAble &&
-            collider.gameObject.GetComponent<ItemControl>().itemData.usageType == Items.UsageType.Equpment && Equip == false)
-        {          
-                List<GameObject> EquipmentSlot = new List<GameObject>();
-
-                for (int a = 0; a < EquipmentSlots.transform.childCount; a++)
-                {
-                    EquipmentSlot.Add(EquipmentSlots.transform.GetChild(a).gameObject);
-                }
-            if (collider.gameObject.GetComponent<ItemControl>().itemData.equpment == Items.Equpment.Hed)
-            {
-                for (int a = 0; a < EquipmentSlot.Count; a++)
-                {
-
-                    if (EquipmentSlot[a].name == "HeadSlot")
-                    {
-                        GameObject GameObjectContainerEquipment = EquipmentSlot[a].transform.Find("GameObjectContainer").gameObject;
-                        if (GameObjectContainerEquipment.transform.childCount == 0)
-                        {
-                            collider.gameObject.transform.parent = GameObjectContainerEquipment.transform;
-                            collider.gameObject.transform.position = GameObjectContainerEquipment.transform.position;
-                            GameObject ImageInEqupment = EquipmentSlot[a].transform.Find("Image").gameObject;
-                            ImageInEqupment.GetComponent<Image>().sprite = collider.gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            collider.gameObject.GetComponent<ItemControl>().ApplayBuffs();
-                            collider.gameObject.SetActive(false);
-                            Equip = true;
-                            break;                         
-                        }
-                        else
-                        {
-                            Equip = false;                            
-                            continue;
-
-                        }
-
-                    }
-                }
-            }
-            if (collider.gameObject.GetComponent<ItemControl>().itemData.equpment == Items.Equpment.Torso)
-            {
-                for (int a = 0; a < EquipmentSlot.Count; a++)
-                {
-
-                    if (EquipmentSlot[a].name == "TorsoSlot")
-                    {
-                        GameObject GameObjectContainerEquipment = EquipmentSlot[a].transform.Find("GameObjectContainer").gameObject;
-                        if (GameObjectContainerEquipment.transform.childCount == 0)
-                        {
-                            collider.gameObject.transform.parent = GameObjectContainerEquipment.transform;
-                            collider.gameObject.transform.position = GameObjectContainerEquipment.transform.position;
-                            GameObject ImageInEqupment = EquipmentSlot[a].transform.Find("Image").gameObject;
-                            ImageInEqupment.GetComponent<Image>().sprite = collider.gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            collider.gameObject.GetComponent<ItemControl>().ApplayBuffs();
-                            collider.gameObject.SetActive(false);
-                            Equip = true;
-                            break;
-                        }
-                        else
-                        {
-                            Equip = false;
-                            continue;
-
-                        }
-
-                    }
-                }
-            }
-            if (collider.gameObject.GetComponent<ItemControl>().itemData.equpment == Items.Equpment.Wepon)
-            {
-                for (int a = 0; a < EquipmentSlot.Count; a++)
-                {
-
-                    if (EquipmentSlot[a].name == "WeaponSlot")
-                    {
-                        GameObject GameObjectContainerEquipment = EquipmentSlot[a].transform.Find("GameObjectContainer").gameObject;
-                        if (GameObjectContainerEquipment.transform.childCount == 0)
-                        {
-                            collider.gameObject.transform.parent = GameObjectContainerEquipment.transform;
-                            collider.gameObject.transform.position = GameObjectContainerEquipment.transform.position;
-                            GameObject ImageInEqupment = EquipmentSlot[a].transform.Find("Image").gameObject;
-                            ImageInEqupment.GetComponent<Image>().sprite = collider.gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            collider.gameObject.GetComponent<ItemControl>().ApplayBuffs();
-                            collider.gameObject.SetActive(false);
-                            Equip = true;
-                            break;
-                        }
-                        else
-                        {
-                            Equip = false;
-                            continue;
-
-                        }
-
-                    }
-                }
-            }
-            if (collider.gameObject.GetComponent<ItemControl>().itemData.equpment == Items.Equpment.Boots)
-            {
-                for (int a = 0; a < EquipmentSlot.Count; a++)
-                {
-                  
-                    if (EquipmentSlot[a].name == "BootsSlot")
-                    {
-                        GameObject GameObjectContainerEquipment = EquipmentSlot[a].transform.Find("GameObjectContainer").gameObject;
-                        if (GameObjectContainerEquipment.transform.childCount == 0)
-                        {
-                            collider.gameObject.transform.parent = GameObjectContainerEquipment.transform;
-                            collider.gameObject.transform.position = GameObjectContainerEquipment.transform.position;
-                            GameObject ImageInEqupment = EquipmentSlot[a].transform.Find("Image").gameObject;
-                            ImageInEqupment.GetComponent<Image>().sprite = collider.gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            collider.gameObject.GetComponent<ItemControl>().ApplayBuffs();
-                            collider.gameObject.SetActive(false);
-                            Equip = true;
-                            break;
-                        }
-                        else
-                        {
-                            Equip = false;
-                            continue;
-
-                        }
-
-                    }
-                }
-            }
-            if (collider.gameObject.GetComponent<ItemControl>().itemData.equpment == Items.Equpment.Shild)
-            {
-                for (int a = 0; a < EquipmentSlot.Count; a++)
-                {
-                    if (EquipmentSlot[a].name == "ShildSlot")
-                    {
-                        GameObject GameObjectContainerEquipment = EquipmentSlot[a].transform.Find("GameObjectContainer").gameObject;
-                        if (GameObjectContainerEquipment.transform.childCount == 0)
-                        {
-                            collider.gameObject.transform.parent = GameObjectContainerEquipment.transform;
-                            collider.gameObject.transform.position = GameObjectContainerEquipment.transform.position;
-                            GameObject ImageInEqupment = EquipmentSlot[a].transform.Find("Image").gameObject;
-                            ImageInEqupment.GetComponent<Image>().sprite = collider.gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            collider.gameObject.GetComponent<ItemControl>().ApplayBuffs();
-                            collider.gameObject.SetActive(false);
-                            Equip = true;
-                            break;
-                        }
-                        else
-                        {
-                            Equip = false;
-                            continue;
-
-                        }
-
-                    }
-                }
-            }
-
-
-        }
-
-        if (collider.gameObject.GetComponent<ItemControl>().itemData.itemType == Items.ItemType.PickUpAble && Equip ==false)
+    private string ReturnSlotName(Items.Equpment itemsEqupment)
+    {
+        string slotName;
+        if (itemsEqupment == Items.Equpment.Hed)
         {
+            slotName = "HeadSlot";
+        }
+        else if (itemsEqupment == Items.Equpment.Torso)
+        {
+            slotName = "TorsoSlot";
+        }
+        else if (itemsEqupment == Items.Equpment.Boots)
+        {
+            slotName = "BootsSlot";
+        }
+        else if (itemsEqupment == Items.Equpment.Shild)
+        {
+            slotName = "ShildSlot";
+        }
+        else if (itemsEqupment == Items.Equpment.Wepon)
+        {
+            slotName = "WeaponSlot";
+        }
+        else
+        {
+            slotName = "";
+        }
+        return slotName;
+    }
 
-            ItemHasntBeanFaund = false;
-            for (int i = 0; Slots.Count > i; i++)
+    private (bool itemEquipped, GameObject gameObjectContainer) CheckIfItemTypeIsAlreadyEquipped(GameObject compareWith)
+    {
+        List<GameObject> EquipmentSlot = new List<GameObject>();
+        for (int a = 0; a < EquipmentSlots.transform.childCount; a++)
+        {
+            EquipmentSlot.Add(EquipmentSlots.transform.GetChild(a).gameObject);
+        }
+        for (int a = 0; a < EquipmentSlot.Count; a++)
+        {
+            if (EquipmentSlot[a].name == ReturnSlotName(compareWith.GetComponent<ItemControl>().itemData.equpment))
             {
-                if (collider.gameObject.GetComponent<ItemControl>().itemData.itemType == Items.ItemType.PickUpAble)
+               GameObject GameObjectContainerEquipment = EquipmentSlot[a].transform.Find("GameObjectContainer").gameObject;
+                if (GameObjectContainerEquipment.transform.childCount == 0)
                 {
-                    
-                    if (collider.gameObject.GetComponent<ItemControl>().itemData.stackable == Items.Stackable.stackableUnlimited && ItemHasntBeanFaund == false)
-                    {
-                        for (int a = 0; Slots.Count > a; a++)
-                        {
-                            GameObjectContainer = Slots[a].transform.Find("GameObjectContainer").gameObject;
-                            if (GameObjectContainer.transform.childCount > 0)
-                            {
 
-                                ItemExistsInContainer = GameObjectContainer.transform.GetChild(0).gameObject;
-                                if (ItemExistsInContainer.GetComponent<ItemControl>().itemData.ItameName == collider.gameObject.GetComponent<ItemControl>().itemData.ItameName)
-                                {
+                    return (false, GameObjectContainerEquipment);
 
-                                    collider.gameObject.transform.parent = GameObjectContainer.transform;
-                                    collider.gameObject.transform.position = GameObjectContainer.transform.position;
-                                    collider.gameObject.SetActive(false);
+                }
 
-
-                                    NumberText = Slots[a].transform.Find("NumberText").gameObject;
-                                    NumberText.GetComponent<TMP_Text>().text = GameObjectContainer.transform.childCount.ToString();
-
-                                    return;
-                                }
-                            }
-                        }
-                        ItemHasntBeanFaund = true;
-
-                    }
-
-                    if (collider.gameObject.GetComponent<ItemControl>().itemData.stackable == Items.Stackable.stackableUnlimited && ItemHasntBeanFaund == true)
-                    {
-                        GameObjectContainer = Slots[i].transform.Find("GameObjectContainer").gameObject;
-                        if (GameObjectContainer.transform.childCount == 0)
-                        {
-                            imageContainer = Slots[i].transform.Find("Image").gameObject;
-                            imageContainer.gameObject.GetComponent<Image>().sprite = collider.gameObject.GetComponent<SpriteRenderer>().sprite;
-
-                            collider.gameObject.transform.parent = GameObjectContainer.transform;
-                            collider.gameObject.transform.position = GameObjectContainer.transform.position;
-                            collider.gameObject.SetActive(false);
-                            ItemHasntBeanFaund = false;
-                            
-                            return;
-                        }
-                    }
-
-                    if (collider.gameObject.GetComponent<ItemControl>().itemData.stackable == Items.Stackable.stackableLimited && ItemHasntBeanFaund == false)
-                    {
-                        for (int a = 0; Slots.Count > a; a++)
-                        {
-                            GameObjectContainer = Slots[a].transform.Find("GameObjectContainer").gameObject;
-
-                            if (GameObjectContainer.transform.childCount < 4 && GameObjectContainer.transform.childCount > 0)
-                            {
-
-                                ItemExistsInContainer = GameObjectContainer.transform.GetChild(0).gameObject;
-                                if (ItemExistsInContainer.GetComponent<ItemControl>().itemData.ItameName == collider.gameObject.GetComponent<ItemControl>().itemData.ItameName)
-                                {
-
-                                    collider.gameObject.transform.parent = GameObjectContainer.transform;
-                                    collider.gameObject.transform.position = GameObjectContainer.transform.position;
-                                    collider.gameObject.SetActive(false);
-
-                                    NumberText = Slots[a].transform.Find("NumberText").gameObject;
-                                    NumberText.GetComponent<TMP_Text>().text = GameObjectContainer.transform.childCount.ToString();
-
-                                    return;
-                                }
-
-                            }
-
-
-
-                        }
-                        ItemHasntBeanFaund = true;
-
-                    }
-
-                    if (collider.gameObject.GetComponent<ItemControl>().itemData.stackable == Items.Stackable.stackableLimited && ItemHasntBeanFaund == true)
-                    {
-                        GameObjectContainer = Slots[i].transform.Find("GameObjectContainer").gameObject;
-                        if (GameObjectContainer.transform.childCount == 0)
-                        {
-
-                            imageContainer = Slots[i].transform.Find("Image").gameObject;
-                            imageContainer.gameObject.GetComponent<Image>().sprite = collider.gameObject.GetComponent<SpriteRenderer>().sprite;
-
-                            collider.gameObject.transform.parent = GameObjectContainer.transform;
-                            collider.gameObject.transform.position = GameObjectContainer.transform.position;
-                            collider.gameObject.SetActive(false);
-                            ItemHasntBeanFaund = false;
-                            
-                            return;
-                        }
-                    }
-
-                    if (collider.gameObject.GetComponent<ItemControl>().itemData.stackable == Items.Stackable.UnStackable)
-                    {
-                        GameObjectContainer = Slots[i].transform.Find("GameObjectContainer").gameObject;
-                        if (GameObjectContainer.transform.childCount == 0)
-                        {
-
-                            imageContainer = Slots[i].transform.Find("Image").gameObject;
-                            imageContainer.gameObject.GetComponent<Image>().sprite = collider.gameObject.GetComponent<SpriteRenderer>().sprite;
-
-                            collider.gameObject.transform.parent = GameObjectContainer.transform;
-                            collider.gameObject.transform.position = GameObjectContainer.transform.position;
-                            collider.gameObject.SetActive(false);
-                            ItemHasntBeanFaund = false;
-                        
-                            return;
-                        }
-                    }
-                }               
             }
+        }
+        return (true, null);
+
+    }
+
+    private void MoveTransformItem(GameObject startPosition, GameObject endPosition)
+    {
+        startPosition.transform.parent = endPosition.transform;
+        startPosition.transform.position = endPosition.transform.position;
+        startPosition.gameObject.SetActive(false);
+    }
+    private void MoveSprites (GameObject startPosition, GameObject endPosition)
+    {
+        GameObject endPositionParent = endPosition.transform.parent.gameObject;
+        GameObject ImageInEqupment = endPositionParent.transform.Find("Image").gameObject;
+        ImageInEqupment.GetComponent<Image>().sprite = startPosition.gameObject.GetComponent<ItemControl>().itemData.Artwork;
+    }
+
+    private (bool itemExist, GameObject gameObjectContainer) CheckIfItemExistInInventoryAndStackable(GameObject itemToCheck)
+    {       
+        if (itemToCheck.gameObject.GetComponent<ItemControl>().itemData.stackable == Items.Stackable.UnStackable)
+        {
+            return (false,null);
+        }
+        else if (itemToCheck.gameObject.GetComponent<ItemControl>().itemData.stackable == Items.Stackable.stackableLimited)
+        {
+            for (int a = 0; Slots.Count > a; a++)
+            {
+                GameObjectContainer = Slots[a].transform.Find("GameObjectContainer").gameObject;
+                if (GameObjectContainer.transform.childCount > 0 && GameObjectContainer.transform.childCount < 5)
+                {
+                    ItemExistsInContainer = GameObjectContainer.transform.GetChild(0).gameObject;
+                    if (ItemExistsInContainer.GetComponent<ItemControl>().itemData.ItameName == itemToCheck.GetComponent<ItemControl>().itemData.ItameName)
+                    {                       
+                        return (true, GameObjectContainer);
+                    }
+                }
+            }
+            return (false, null);
+        }
+        else if (itemToCheck.gameObject.GetComponent<ItemControl>().itemData.stackable == Items.Stackable.stackableUnlimited)
+        {
+            for (int a = 0; Slots.Count > a; a++)
+            {
+                GameObjectContainer = Slots[a].transform.Find("GameObjectContainer").gameObject;
+                if (GameObjectContainer.transform.childCount > 0)
+                {
+                    ItemExistsInContainer = GameObjectContainer.transform.GetChild(0).gameObject;
+                    if (ItemExistsInContainer.GetComponent<ItemControl>().itemData.ItameName == itemToCheck.GetComponent<ItemControl>().itemData.ItameName)
+                    {
+                        return (true, GameObjectContainer);
+                    }
+                }
+            }
+            return (false, null);
+        }
+        else
+        {
+            return (false, null);
+        }
+    }
+    private (bool inventoryIsFull, GameObject gameObjectContainer) ReturnFirstAvailableSlotInTheInventory()
+    {
+        for (int a = 0; Slots.Count > a; a++)
+        {
+            GameObjectContainer = Slots[a].transform.Find("GameObjectContainer").gameObject;
+            if (GameObjectContainer.transform.childCount == 0)
+            {
+                return (false,GameObjectContainer);
+            }
+        }
+        return (true,null);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        CheckNumberOfSlots();
+
+        if (collider.gameObject.GetComponent<ItemControl>().itemData.itemType == Items.ItemType.PickUpAble)
+        {
+          if(  CheckIfItemTypeIsAlreadyEquipped(collider.gameObject).itemEquipped == false)
+            {
+                GameObject container = CheckIfItemTypeIsAlreadyEquipped(collider.gameObject).gameObjectContainer;
+                MoveTransformItem(collider.gameObject, container);
+                MoveSprites(collider.gameObject, container);
+            }
+            else
+            {
+                if (CheckIfItemExistInInventoryAndStackable(collider.gameObject).itemExist == true)
+                {
+                    GameObject container = CheckIfItemExistInInventoryAndStackable(collider.gameObject).gameObjectContainer;
+                    MoveTransformItem(collider.gameObject, container);
+                    MoveSprites(collider.gameObject, container);
+                    GameObject slot = container.transform.parent.gameObject;
+                    UiItemControl uiItemControl = slot.GetComponent<UiItemControl>();
+                    
+                    uiItemControl.UpdateNuberOfItemInSlot(slot, false);
+                }
+                else
+                {
+                    if (ReturnFirstAvailableSlotInTheInventory().inventoryIsFull == false)
+                    {
+                        GameObject container = ReturnFirstAvailableSlotInTheInventory().gameObjectContainer;
+                        MoveTransformItem(collider.gameObject, container);
+                        MoveSprites(collider.gameObject, container);
+                    }
+                    else
+                    {
+                        Debug.Log("Inventuriy is full");
+                    }
+
+                }
+
+            }
+
+
         }
         else if (collider.gameObject.GetComponent<ItemControl>().itemData.itemType == Items.ItemType.PermanentUsage)
         {
             collider.gameObject.GetComponent<ItemControl>().ApplayBuffs();
             Destroy(collider.gameObject);
+            Debug.Log("***Permanent Usage item has been applayd.***");
 
         }
 

@@ -36,7 +36,7 @@ public class PlayerStats : MonoBehaviour
     public int MaxHelth;
     public int CurentHelth;
 
-    //public int Strenght;
+    public int Strenght;
     public int Dexterity;
     public int Agility;
     public int Intelligence;
