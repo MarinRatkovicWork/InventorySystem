@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
+
 public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler
 {
     private GameObject GameObjectContainer;
@@ -38,11 +39,104 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private GameObject imageItem;
     private Vector2 ItemImagePosition;
 
+
+
     void Start()
     {
         ItemPreviewe.SetActive(false);       
     }
 
+    private bool fallowStart;
+    private GameObject clickObjectFallow;
+    private GameObject clickObjectDrop;
+    private GameObject fallowImage;
+    private Transform fallowImagePosition;
+    void Update()
+    {
+        /*
+        if(fallowStart == true)
+        {
+            fallowImage.transform.position = Input.mousePosition;
+        }*/
+    }
+
+    private GameObject StartFallow(GameObject clickObjectFallow )
+    {              
+        GameObject CurentSlot = clickObjectFallow;
+
+        if (CurentSlot.transform.childCount > 0)
+        {
+            GameObject GameObjectContainer = CurentSlot.transform.Find("GameObjectContainer").gameObject;
+            if (GameObjectContainer.transform.childCount > 0)
+            {
+                GameObject ImageFallow = clickObjectFallow.gameObject.transform.Find("Image").gameObject;
+                fallowImagePosition = ImageFallow.transform;
+                ImageFallow.transform.SetParent(GameObject.Find("RightHolder").transform);               
+                ImageFallow.transform.localScale = ImageFallow.transform.localScale * 2;               
+                fallowStart = true;
+                return ImageFallow;
+            }
+            fallowStart = false;
+            return null;
+        }
+        fallowStart = false;
+        return null;
+    }   
+    private void EndFallow(GameObject clickObjectFallow, GameObject clickObjectDrop, GameObject fallowImage)
+    {
+        
+            GameObject imageItemParent = GameObject.Find("RightHolder").gameObject;
+            GameObject imageDragd = imageItemParent.transform.Find("Image").gameObject;
+           imageDragd.transform.position = clickObjectFallow.transform.position;
+            imageDragd.transform.localScale = imageDragd.transform.localScale / 2;
+            imageDragd.transform.SetParent(clickObjectFallow.transform);
+            imageDragd.transform.SetSiblingIndex(2);
+
+            GameObject startSwap = clickObjectFallow.gameObject;
+            GameObject endSwap = clickObjectDrop.gameObject;
+            SwopSlots(startSwap, endSwap);
+
+        clickObjectDrop = null;
+        fallowImage = null;
+        fallowStart = false;
+    }
+    public void OnPointerClick(PointerEventData eventData)
+    {
+
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+
+            SwopEqupmentOnRightClik(eventData);
+        }
+        else
+        if (eventData.button == PointerEventData.InputButton.Middle)
+        {
+            ConsumeItem(eventData);
+        }
+        else if (Input.GetKey(KeyCode.Q) && eventData.button == PointerEventData.InputButton.Left)
+        {
+            Debug.Log("Radi");
+            DropToWorld(eventData.pointerPress.gameObject);
+
+        }
+        else if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            /*
+            if (fallowStart == false)
+            {
+                Debug.Log("100");
+                clickObjectFallow = eventData.pointerPress.gameObject;
+                fallowImage = StartFallow(clickObjectFallow);
+            }
+            else if (fallowStart == true)
+            {
+                Debug.Log("200");
+                clickObjectDrop = eventData.pointerPress.gameObject;
+                EndFallow(clickObjectFallow, clickObjectDrop, imageItem);
+            }*/
+            
+        }
+    }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -89,7 +183,6 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnBeginDrag(PointerEventData data)
     {
         
-        //Issues: - Empty inventory and equipment slot can be dragged (with no effect) - it shouldn't be possible 
         GameObject CurentSlot = data.pointerDrag.gameObject;
        
         if (CurentSlot.transform.childCount >0)
@@ -101,7 +194,6 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 imageItem.transform.SetParent(GameObject.Find("RightHolder").transform);
                 ItemImagePosition = imageItem.transform.position;
                 imageItem.transform.localScale = imageItem.transform.localScale * 2;
-
             }
             else
             {
@@ -124,229 +216,187 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     }
     public void OnDrag(PointerEventData data)
     {       
-            imageItem.transform.position = Input.mousePosition;       
+            imageItem.transform.position = Input.mousePosition;
+       
     }
     public void OnDrop(PointerEventData data)
     {
         GameObject imageItemParent = GameObject.Find("RightHolder").gameObject;
         GameObject imageDragd = imageItemParent.transform.Find("Image").gameObject;
-        GameObject CurentSlot = data.pointerDrag.gameObject;
         imageDragd.transform.SetParent(data.pointerDrag.transform);
         imageDragd.transform.SetSiblingIndex(3);
 
-
-        SwopSlots(data);
+        GameObject startSwap = data.pointerDrag.gameObject; 
+        GameObject endSwap = data.pointerCurrentRaycast.gameObject;
+        SwopSlots(startSwap,endSwap);
     }
-
-    private void SwopSlots(PointerEventData data)
+    private string ReturnSlotName(Items.Equpment itemsEqupment)
     {
-
-        GameObject CurentSlot = data.pointerDrag.gameObject;
-        GameObject GameObjectContainer = CurentSlot.transform.Find("GameObjectContainer").gameObject;
-        if (GameObjectContainer.transform.childCount > 0)
+        string slotName;
+        if (itemsEqupment == Items.Equpment.Hed)
         {
-            GameObject ItemInContainer = GameObjectContainer.transform.GetChild(0).gameObject;
-            GameObject SlotToSwopWith = data.pointerCurrentRaycast.gameObject;
+            slotName = "HeadSlot";
+        }
+        else if (itemsEqupment == Items.Equpment.Torso)
+        {
+            slotName = "TorsoSlot";
+        }
+        else if (itemsEqupment == Items.Equpment.Boots)
+        {
+            slotName = "BootsSlot";
+        }
+        else if (itemsEqupment == Items.Equpment.Shild)
+        {
+            slotName = "ShildSlot";
+        }
+        else if (itemsEqupment == Items.Equpment.Wepon)
+        {
+            slotName = "WeaponSlot";
+        }
+        else
+        {
+            slotName = "";
+        }
+        return slotName;
+    }
+    private void SwapItemsSlotToEqupment(GameObject startSwap, GameObject endSwap)
+    {
+        GameObject gameObjectContainerStart = startSwap.transform.Find("GameObjectContainer").gameObject;        
+        GameObject gameObjectContainerEnd = endSwap.transform.Find("GameObjectContainer").gameObject;
 
-            if (SlotToSwopWith != DropToWorldPanel)
+        if (gameObjectContainerStart.transform.childCount > 0)
+        {
+            GameObject itemStart = gameObjectContainerStart.transform.GetChild(0).gameObject;
+            if (ReturnSlotName(itemStart.GetComponent<ItemControl>().itemData.equpment) == endSwap.name )
             {
-                GameObject GameObjectContainerToSwap = SlotToSwopWith.transform.Find("GameObjectContainer").gameObject;
-                if (SlotToSwopWith.transform.parent == CurentSlot.transform.parent)
+                if (gameObjectContainerEnd.transform.childCount > 0)
                 {
-                    if (GameObjectContainerToSwap.transform.childCount > 0)
+                    GameObject itemEnd = gameObjectContainerEnd.transform.GetChild(0).gameObject;
+                    itemEnd.transform.parent = gameObjectContainerStart.transform;
+                    itemStart.transform.parent = gameObjectContainerEnd.transform;
+                    SwapSpritesSlotToSlot(startSwap, endSwap);
+                    itemStart.GetComponent<ItemControl>().ApplayBuffs();
+                    itemEnd.GetComponent<ItemControl>().RemoveBuffs();
+                }
+                else
+                {
+                  
+                    itemStart.transform.parent = gameObjectContainerEnd.transform;
+                    SwapSpritesSlotToSlot(startSwap, endSwap);
+                    itemStart.GetComponent<ItemControl>().ApplayBuffs();
+                }
+            }
+            else if (endSwap.transform.parent.name == "ItemSlotContanier")
+            {
+                if (gameObjectContainerEnd.transform.childCount > 0)
+                {
+                    GameObject itemEnd = gameObjectContainerEnd.transform.GetChild(0).gameObject;
+                    if (itemEnd.GetComponent<ItemControl>().itemData.equpment == itemStart.GetComponent<ItemControl>().itemData.equpment)
                     {
-
-
-
-                        List<GameObject> StartItems = new List<GameObject>();
-
-                        for (int i = 0; i < GameObjectContainer.transform.childCount; i++)
-                        {
-                            StartItems.Add(GameObjectContainer.transform.GetChild(i).gameObject);
-
-                        }
-
-                        List<GameObject> SwapItems = new List<GameObject>();
-
-                        for (int i = 0; i < GameObjectContainerToSwap.transform.childCount; i++)
-                        {
-                            SwapItems.Add(GameObjectContainerToSwap.transform.GetChild(i).gameObject);
-                        }
-
-                        for (int i = 0; i < SwapItems.Count; i++)
-                        {
-                            SwapItems[i].transform.parent = GameObjectContainer.transform;
-                        }
-
-                        for (int i = 0; i < StartItems.Count; i++)
-                        {
-                            StartItems[i].transform.parent = GameObjectContainerToSwap.transform;
-
-                        }
-                        Image ItemImage = CurentSlot.transform.Find("Image").gameObject.GetComponent<Image>();
-                        ItemImage.sprite = GameObjectContainer.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                        UpdateNuberOfItemInSlot(CurentSlot, false);
-
-                        Image SwapItemImage = SlotToSwopWith.transform.Find("Image").gameObject.GetComponent<Image>();
-                        SwapItemImage.sprite = GameObjectContainerToSwap.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                        UpdateNuberOfItemInSlot(SlotToSwopWith, false);
-                    }
-
-                    else
-                    {
-                        List<GameObject> StartItems = new List<GameObject>();
-
-                        for (int i = 0; i < GameObjectContainer.transform.childCount; i++)
-                        {
-                            StartItems.Add(GameObjectContainer.transform.GetChild(i).gameObject);
-                        }
-                        for (int i = 0; i < StartItems.Count; i++)
-                        {
-                            StartItems[i].transform.parent = GameObjectContainerToSwap.transform;
-
-                        }
-                        Image ItemImage = CurentSlot.transform.Find("Image").gameObject.GetComponent<Image>();
-                        ItemImage.sprite = null;
-                        UpdateNuberOfItemInSlot(CurentSlot, false);
-
-                        Image SwapItemImage = SlotToSwopWith.transform.Find("Image").gameObject.GetComponent<Image>();
-                        SwapItemImage.sprite = GameObjectContainerToSwap.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                        UpdateNuberOfItemInSlot(SlotToSwopWith, false);
+                        itemEnd.transform.parent = gameObjectContainerStart.transform;
+                        itemStart.transform.parent = gameObjectContainerEnd.transform;
+                        SwapSpritesSlotToSlot(startSwap, endSwap);
+                        itemStart.GetComponent<ItemControl>().ApplayBuffs();
+                        itemEnd.GetComponent<ItemControl>().RemoveBuffs();
                     }
                 }
-                else if (SlotToSwopWith.transform.parent.name == EqupmentSlots.name && ItemInContainer.GetComponent<ItemControl>().itemData.usageType == Items.UsageType.Equpment)
+                else
                 {
-                    if (ItemInContainer.GetComponent<ItemControl>().itemData.equpment == Items.Equpment.Hed && SlotToSwopWith.name == "HeadSlot")
-                    {
-                        GameObject StartItem = GameObjectContainer.transform.GetChild(0).gameObject;
-                        if (GameObjectContainerToSwap.transform.childCount > 0)
-                        {
-                            GameObject SwopItem = GameObjectContainerToSwap.transform.GetChild(0).gameObject;
-                            SwopItem.transform.parent = GameObjectContainer.transform;
-                            StartItem.transform.parent = GameObjectContainerToSwap.transform;
-                            Image SwapItemImage = SlotToSwopWith.transform.Find("Image").gameObject.GetComponent<Image>();
-                            SwapItemImage.sprite = GameObjectContainerToSwap.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            Image ItemImage = CurentSlot.transform.Find("Image").gameObject.GetComponent<Image>();
-                            ItemImage.sprite = GameObjectContainer.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            StartItem.GetComponent<ItemControl>().ApplayBuffs();
-                            SwopItem.GetComponent<ItemControl>().RemoveBuffs();
-                        }
-                        else
-                        {
-                            StartItem.transform.parent = GameObjectContainerToSwap.transform;
-                            Image SwapItemImage = SlotToSwopWith.transform.Find("Image").gameObject.GetComponent<Image>();
-                            SwapItemImage.sprite = GameObjectContainerToSwap.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            Image ItemImage = CurentSlot.transform.Find("Image").gameObject.GetComponent<Image>();
-                            ItemImage.sprite = null;
-                            StartItem.GetComponent<ItemControl>().ApplayBuffs();
-                        }
-                    }
-                    else if (ItemInContainer.GetComponent<ItemControl>().itemData.equpment == Items.Equpment.Torso && SlotToSwopWith.name == "TorsoSlot")
-                    {
-                        GameObject StartItem = GameObjectContainer.transform.GetChild(0).gameObject;
-                        if (GameObjectContainerToSwap.transform.childCount > 0)
-                        {
-                            GameObject SwopItem = GameObjectContainerToSwap.transform.GetChild(0).gameObject;
-                            SwopItem.transform.parent = GameObjectContainer.transform;
-                            StartItem.transform.parent = GameObjectContainerToSwap.transform;
-                            Image SwapItemImage = SlotToSwopWith.transform.Find("Image").gameObject.GetComponent<Image>();
-                            SwapItemImage.sprite = GameObjectContainerToSwap.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            Image ItemImage = CurentSlot.transform.Find("Image").gameObject.GetComponent<Image>();
-                            ItemImage.sprite = GameObjectContainer.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            StartItem.GetComponent<ItemControl>().ApplayBuffs();
-                            SwopItem.GetComponent<ItemControl>().RemoveBuffs();
-                        }
-                        else
-                        {
-                            StartItem.transform.parent = GameObjectContainerToSwap.transform;
-                            Image SwapItemImage = SlotToSwopWith.transform.Find("Image").gameObject.GetComponent<Image>();
-                            SwapItemImage.sprite = GameObjectContainerToSwap.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            Image ItemImage = CurentSlot.transform.Find("Image").gameObject.GetComponent<Image>();
-                            ItemImage.sprite = null;
-                            StartItem.GetComponent<ItemControl>().ApplayBuffs();
-                        }
-                    }
-                    else if (ItemInContainer.GetComponent<ItemControl>().itemData.equpment == Items.Equpment.Boots && SlotToSwopWith.name == "BootsSlot")
-                    {
-                        GameObject StartItem = GameObjectContainer.transform.GetChild(0).gameObject;
-                        if (GameObjectContainerToSwap.transform.childCount > 0)
-                        {
-                            GameObject SwopItem = GameObjectContainerToSwap.transform.GetChild(0).gameObject;
-                            SwopItem.transform.parent = GameObjectContainer.transform;
-                            StartItem.transform.parent = GameObjectContainerToSwap.transform;
-                            Image SwapItemImage = SlotToSwopWith.transform.Find("Image").gameObject.GetComponent<Image>();
-                            SwapItemImage.sprite = GameObjectContainerToSwap.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            Image ItemImage = CurentSlot.transform.Find("Image").gameObject.GetComponent<Image>();
-                            ItemImage.sprite = GameObjectContainer.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            StartItem.GetComponent<ItemControl>().ApplayBuffs();
-                            SwopItem.GetComponent<ItemControl>().RemoveBuffs();
-                        }
-                        else
-                        {
-                            StartItem.transform.parent = GameObjectContainerToSwap.transform;
-                            Image SwapItemImage = SlotToSwopWith.transform.Find("Image").gameObject.GetComponent<Image>();
-                            SwapItemImage.sprite = GameObjectContainerToSwap.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            Image ItemImage = CurentSlot.transform.Find("Image").gameObject.GetComponent<Image>();
-                            ItemImage.sprite = null;
-                            StartItem.GetComponent<ItemControl>().ApplayBuffs();
-                        }
-                    }
-                    else if (ItemInContainer.GetComponent<ItemControl>().itemData.equpment == Items.Equpment.Wepon && SlotToSwopWith.name == "WeaponSlot")
-                    {
-                        GameObject StartItem = GameObjectContainer.transform.GetChild(0).gameObject;
-                        if (GameObjectContainerToSwap.transform.childCount > 0)
-                        {
-                            GameObject SwopItem = GameObjectContainerToSwap.transform.GetChild(0).gameObject;
-                            SwopItem.transform.parent = GameObjectContainer.transform;
-                            StartItem.transform.parent = GameObjectContainerToSwap.transform;
-                            Image SwapItemImage = SlotToSwopWith.transform.Find("Image").gameObject.GetComponent<Image>();
-                            SwapItemImage.sprite = GameObjectContainerToSwap.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            Image ItemImage = CurentSlot.transform.Find("Image").gameObject.GetComponent<Image>();
-                            ItemImage.sprite = GameObjectContainer.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            StartItem.GetComponent<ItemControl>().ApplayBuffs();
-                            SwopItem.GetComponent<ItemControl>().RemoveBuffs();
-                        }
-                        else
-                        {
-                            StartItem.transform.parent = GameObjectContainerToSwap.transform;
-                            Image SwapItemImage = SlotToSwopWith.transform.Find("Image").gameObject.GetComponent<Image>();
-                            SwapItemImage.sprite = GameObjectContainerToSwap.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            Image ItemImage = CurentSlot.transform.Find("Image").gameObject.GetComponent<Image>();
-                            ItemImage.sprite = null;
-                            StartItem.GetComponent<ItemControl>().ApplayBuffs();
-                        }
-                    }
-                    else if (ItemInContainer.GetComponent<ItemControl>().itemData.equpment == Items.Equpment.Shild && SlotToSwopWith.name == "ShildSlot")
-                    {
-                        GameObject StartItem = GameObjectContainer.transform.GetChild(0).gameObject;
-                        if (GameObjectContainerToSwap.transform.childCount > 0)
-                        {
-                            GameObject SwopItem = GameObjectContainerToSwap.transform.GetChild(0).gameObject;
-                            SwopItem.transform.parent = GameObjectContainer.transform;
-                            StartItem.transform.parent = GameObjectContainerToSwap.transform;
-                            Image SwapItemImage = SlotToSwopWith.transform.Find("Image").gameObject.GetComponent<Image>();
-                            SwapItemImage.sprite = GameObjectContainerToSwap.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            Image ItemImage = CurentSlot.transform.Find("Image").gameObject.GetComponent<Image>();
-                            ItemImage.sprite = GameObjectContainer.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            StartItem.GetComponent<ItemControl>().ApplayBuffs();
-                            SwopItem.GetComponent<ItemControl>().RemoveBuffs();
-                        }
-                        else
-                        {
-                            StartItem.transform.parent = GameObjectContainerToSwap.transform;
-                            Image SwapItemImage = SlotToSwopWith.transform.Find("Image").gameObject.GetComponent<Image>();
-                            SwapItemImage.sprite = GameObjectContainerToSwap.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
-                            Image ItemImage = CurentSlot.transform.Find("Image").gameObject.GetComponent<Image>();
-                            ItemImage.sprite = null;
-                            StartItem.GetComponent<ItemControl>().ApplayBuffs();
-                        }
-                    }
+                    
+                    itemStart.transform.parent = gameObjectContainerEnd.transform;
+                    SwapSpritesSlotToSlot(startSwap, endSwap);
+                    itemStart.GetComponent<ItemControl>().RemoveBuffs();
                 }
             }
             else
             {
-                DropToWorld(CurentSlot);
+                return;
             }
+        }
+    }
+    private void SwapItemItemsSlotToSlot(GameObject startSwap, GameObject endSwap)
+    {
+        GameObject gameObjectContainerStart = startSwap.transform.Find("GameObjectContainer").gameObject;       
+        List<GameObject> startSwapItems = new List<GameObject>();
+
+        for (int i = 0; i < gameObjectContainerStart.transform.childCount; i++)
+        {
+            startSwapItems.Add(gameObjectContainerStart.transform.GetChild(i).gameObject);
+        }
+        
+        GameObject gameObjectContainerEnd = endSwap.transform.Find("GameObjectContainer").gameObject;     
+        List<GameObject> endSwapItems = new List<GameObject>();
+
+        for (int i = 0; i < gameObjectContainerEnd.transform.childCount; i++)
+        {
+            endSwapItems.Add(gameObjectContainerEnd.transform.GetChild(i).gameObject);
+        }            
+
+        foreach(GameObject item in startSwapItems)
+        {
+            item.transform.parent = gameObjectContainerEnd.transform;
+        }
+        
+        foreach(GameObject item in endSwapItems)
+        {
+            item.transform.parent = gameObjectContainerStart.transform;
+        }
+    }
+
+    private void SwapSpritesSlotToSlot(GameObject startSwap, GameObject endSwap)
+    {
+        GameObject gameObjectContainerStart = startSwap.transform.Find("GameObjectContainer").gameObject;
+        Image ItemImage = startSwap.transform.Find("Image").gameObject.GetComponent<Image>();
+        if (gameObjectContainerStart.transform.childCount != 0)
+        {
+            ItemImage.sprite = gameObjectContainerStart.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
+            UpdateNuberOfItemInSlot(startSwap, false);
+        }
+        else
+        {
+            ItemImage.sprite = null;
+            UpdateNuberOfItemInSlot(startSwap, false);
+        }
+
+        GameObject gameObjectContainerEnd = endSwap.transform.Find("GameObjectContainer").gameObject;
+        Image SwapItemImage = endSwap.transform.Find("Image").gameObject.GetComponent<Image>();
+        if (gameObjectContainerEnd.transform.childCount != 0)
+        {
+            SwapItemImage.sprite = gameObjectContainerEnd.transform.GetChild(0).gameObject.GetComponent<ItemControl>().itemData.Artwork;
+            UpdateNuberOfItemInSlot(endSwap, false);
+        }
+        else
+        {
+            ItemImage.sprite = null;
+            UpdateNuberOfItemInSlot(endSwap, false);
+        }
+    }
+
+    private void ItemSwapDropPoint(GameObject startSwap, GameObject endSwap)
+    {
+        if (startSwap.transform.parent == endSwap.transform.parent)
+        {
+            SwapItemItemsSlotToSlot(startSwap, endSwap);
+            SwapSpritesSlotToSlot(startSwap, endSwap);
+         
+        }
+        else if (endSwap.transform.parent.name == EqupmentSlots.name || startSwap.transform.parent.name == EqupmentSlots.name)
+        {
+            SwapItemsSlotToEqupment(startSwap, endSwap);           
+            Debug.Log("2");
+        }
+        else
+        {
+          DropToWorld(startSwap);
+          
+        }
+    }
+    private void SwopSlots(GameObject startSwap, GameObject endSwap)
+    {      
+        GameObject GameObjectContainer = startSwap.transform.Find("GameObjectContainer").gameObject;
+        if (GameObjectContainer.transform.childCount > 0)
+        {          
+            ItemSwapDropPoint(startSwap, endSwap);
         }
     }
     public void DropToWorld(GameObject Slot)
@@ -386,32 +436,9 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
 
     }
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if (eventData.pointerPress.gameObject.transform.childCount > 0)
-        {
-            if (eventData.button == PointerEventData.InputButton.Right)
-            {
+    
+    
 
-                SwopEqupmentOnRightClik(eventData);
-            }
-            else
-            if (eventData.button == PointerEventData.InputButton.Middle)
-            {
-                ConsumeItem(eventData);
-            }
-            else if (Input.GetKey(KeyCode.Q) && eventData.button == PointerEventData.InputButton.Left)
-            {
-                Debug.Log("Radi");
-                DropToWorld(eventData.pointerPress.gameObject);
-
-            }
-        }
-        else
-        {
-            eventData.pointerPress = null;
-        }
-    }
     private void SwopEqupmentOnRightClik(PointerEventData data)
     {
         GameObject ItemToPlace = data.pointerPress.gameObject;
@@ -636,34 +663,38 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     }
     public void UpdateNuberOfItemInSlot(GameObject Slot, bool minus)
     {
-        GameObject GameObjectContainerFoItems = Slot.transform.Find("GameObjectContainer").gameObject;
-        GameObject textNuberOfItems = Slot.transform.Find("NumberText").gameObject;
-        if (minus == true)
+        GameObject GameObjectContainerForItems = Slot.transform.Find("GameObjectContainer").gameObject;
+        if (GameObjectContainerForItems.transform.parent.name == "ItemSlotContanier")
         {
-            int nuberOfItems = GameObjectContainerFoItems.transform.childCount - 1;
-            if (nuberOfItems > 1)
+            GameObject textNuberOfItems = Slot.transform.Find("NumberText").gameObject;
+            if (minus == true)
             {
-                textNuberOfItems.GetComponent<TMP_Text>().SetText(nuberOfItems.ToString());
+                int nuberOfItems = GameObjectContainerForItems.transform.childCount - 1;
+                if (nuberOfItems > 1)
+                {
+                    textNuberOfItems.GetComponent<TMP_Text>().SetText(nuberOfItems.ToString());
+                }
+                else
+                {
+                    textNuberOfItems.GetComponent<TMP_Text>().SetText("");
+                }
             }
             else
             {
-                textNuberOfItems.GetComponent<TMP_Text>().SetText("");
-            }
-        }
-        else
-        {
-            int nuberOfItems = GameObjectContainerFoItems.transform.childCount;
-            if (nuberOfItems > 1)
-            {
-                textNuberOfItems.GetComponent<TMP_Text>().SetText(nuberOfItems.ToString());
-                
-            }
-            else
-            {
-                textNuberOfItems.GetComponent<TMP_Text>().SetText("");              
+                int nuberOfItems = GameObjectContainerForItems.transform.childCount;
+                if (nuberOfItems > 1)
+                {
+                    textNuberOfItems.GetComponent<TMP_Text>().SetText(nuberOfItems.ToString());
+
+                }
+                else
+                {
+                    textNuberOfItems.GetComponent<TMP_Text>().SetText("");
+                }
             }
         }
     }
+
    /* public void ChangeColorItemStacableLimited(GameObject Slot)
     {
         GameObject GameObjectContainerFoItems = Slot.transform.Find("GameObjectContainer").gameObject;

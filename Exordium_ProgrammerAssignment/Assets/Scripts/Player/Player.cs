@@ -5,12 +5,8 @@ using UnityEngine.UI;
 using TMPro;
 public class Player : MonoBehaviour
 {
-    // movment
-    public float moveSpeed = 1.4f;
-    public Rigidbody2D Rb;
-    public Animator animator;
-    Vector2 movement;
-    //Item pic up
+    public bool fallowStart = false;
+
     public GameObject ItemSlotContanier;
     List<GameObject> Slots = new List<GameObject>();
     private GameObject imageContainer;
@@ -18,101 +14,7 @@ public class Player : MonoBehaviour
     private GameObject ItemExistsInContainer;
     private GameObject NumberText;
     private bool ItemHasntBeanFaund;
-    public GameObject EquipmentSlots;
-    // schorcuts
-    public GameObject InventoryButoon;
-    public GameObject EquipmentButoon;
-    public GameObject AttributesButoon;
-    public GameObject InventoryPanel;
-    public GameObject EquipmentPanel;
-    public GameObject AttributesPanel;
-    //ItemSpowner
-    public List<Items> items = new List<Items>();
-    public GameObject item;
-
-    //
-
-
-    private void Awake()
-    {
-        GameObject Equipment = GameObject.Find("Equipment").gameObject;
-        Equipment.SetActive(false);
-        GameObject Inventory = GameObject.Find("Inventory").gameObject;
-        Inventory.SetActive(false);
-        GameObject Atrtributes = GameObject.Find("Atrtributes").gameObject;
-        Atrtributes.SetActive(false);
-    }
-
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        movement.x = Input.GetAxis("Horizontal");
-        movement.y = Input.GetAxis("Vertical");
-
-        animator.SetFloat("Horizontal", movement.x);
-        animator.SetFloat("Vertical", movement.y);
-        animator.SetFloat("Speed", movement.magnitude);
-        Schorcats();
-    }
-
-    void FixedUpdate()
-    {
-        Rb.MovePosition(Rb.position + movement * moveSpeed * Time.fixedDeltaTime);
-    }
-
-    private void Schorcats()
-    {
-
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SpownItems();
-        } else
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            if (InventoryPanel.active == true)
-            {
-                InventoryPanel.SetActive(false);
-                InventoryButoon.SetActive(true);
-            }
-            else
-            {
-                InventoryPanel.SetActive(true);
-                InventoryButoon.SetActive(false);
-            }
-        } else
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (EquipmentPanel.active == true)
-            {
-                EquipmentPanel.SetActive(false);
-                EquipmentButoon.SetActive(true);
-            }
-            else
-            {
-                EquipmentPanel.SetActive(true);
-                EquipmentButoon.SetActive(false);
-            }
-        } else
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            if (AttributesPanel.active == true)
-            {
-                AttributesPanel.SetActive(false);
-                AttributesButoon.SetActive(true);
-
-            }
-            else
-            {
-                AttributesPanel.SetActive(true);
-                AttributesButoon.SetActive(false);
-            }
-        }
-    }
-
+    public GameObject EquipmentSlots;   
     private void CheckNumberOfSlots()
     {
         for (int i = 0; i < ItemSlotContanier.transform.childCount; i++)
@@ -299,22 +201,5 @@ public class Player : MonoBehaviour
     }
 
 
-    public void SpownItems()
-    {
-        
-        for (int i = 0; i < items.Count; i++)
-        {
-            Instantiate(item, new Vector3(Random.Range(-32, 32)/ 5.0F,Random.Range(23, -23) / 5.0F, Random.Range(-1, 0) / 5.0F), Quaternion.identity);
-            item.GetComponent < ItemControl >().itemData =items[i];
-
-           
-           
-
-        }
-
-    }
-
-
-    
 
 }
