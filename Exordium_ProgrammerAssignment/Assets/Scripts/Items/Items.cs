@@ -11,6 +11,7 @@ public class Items : ScriptableObject
     {
         PickUpAble,
         PermanentUsage,    
+        CutScene,
     }   
     public ItemType itemType;
     public enum UsageType

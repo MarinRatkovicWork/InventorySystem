@@ -14,7 +14,8 @@ public class Player : MonoBehaviour
     private GameObject ItemExistsInContainer;
     private GameObject NumberText;
     private bool ItemHasntBeanFaund;
-    public GameObject EquipmentSlots;   
+    public GameObject EquipmentSlots;
+  
     private void CheckNumberOfSlots()
     {
         for (int i = 0; i < ItemSlotContanier.transform.childCount; i++)
@@ -150,7 +151,7 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider)
     {
         CheckNumberOfSlots();
-
+        /*
         if (collider.gameObject.GetComponent<ItemControl>().itemData.itemType == Items.ItemType.PickUpAble)
         {
           if(  CheckIfItemTypeIsAlreadyEquipped(collider.gameObject).itemEquipped == false)
@@ -197,7 +198,8 @@ public class Player : MonoBehaviour
             Debug.Log("***Permanent Usage item has been applayd.***");
 
         }
-
+        
+        */
     }
 
 
