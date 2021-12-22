@@ -151,55 +151,56 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider)
     {
         CheckNumberOfSlots();
-        /*
-        if (collider.gameObject.GetComponent<ItemControl>().itemData.itemType == Items.ItemType.PickUpAble)
+        if (collider.gameObject.GetComponent<ItemControl>() != null)
         {
-          if(  CheckIfItemTypeIsAlreadyEquipped(collider.gameObject).itemEquipped == false)
+            if (collider.gameObject.GetComponent<ItemControl>().itemData.itemType == Items.ItemType.PickUpAble)
             {
-                GameObject container = CheckIfItemTypeIsAlreadyEquipped(collider.gameObject).gameObjectContainer;
-                MoveTransformItem(collider.gameObject, container);
-                MoveSprites(collider.gameObject, container);
-            }
-            else
-            {
-                if (CheckIfItemExistInInventoryAndStackable(collider.gameObject).itemExist == true)
+                if (CheckIfItemTypeIsAlreadyEquipped(collider.gameObject).itemEquipped == false)
                 {
-                    GameObject container = CheckIfItemExistInInventoryAndStackable(collider.gameObject).gameObjectContainer;
+                    GameObject container = CheckIfItemTypeIsAlreadyEquipped(collider.gameObject).gameObjectContainer;
                     MoveTransformItem(collider.gameObject, container);
                     MoveSprites(collider.gameObject, container);
-                    GameObject slot = container.transform.parent.gameObject;
-                    UiItemControl uiItemControl = slot.GetComponent<UiItemControl>();
-                    
-                    uiItemControl.UpdateNuberOfItemInSlot(slot, false);
                 }
                 else
                 {
-                    if (ReturnFirstAvailableSlotInTheInventory().inventoryIsFull == false)
+                    if (CheckIfItemExistInInventoryAndStackable(collider.gameObject).itemExist == true)
                     {
-                        GameObject container = ReturnFirstAvailableSlotInTheInventory().gameObjectContainer;
+                        GameObject container = CheckIfItemExistInInventoryAndStackable(collider.gameObject).gameObjectContainer;
                         MoveTransformItem(collider.gameObject, container);
                         MoveSprites(collider.gameObject, container);
+                        GameObject slot = container.transform.parent.gameObject;
+                        UiItemControl uiItemControl = slot.GetComponent<UiItemControl>();
+
+                        uiItemControl.UpdateNuberOfItemInSlot(slot, false);
                     }
                     else
                     {
-                        Debug.Log("Inventuriy is full");
+                        if (ReturnFirstAvailableSlotInTheInventory().inventoryIsFull == false)
+                        {
+                            GameObject container = ReturnFirstAvailableSlotInTheInventory().gameObjectContainer;
+                            MoveTransformItem(collider.gameObject, container);
+                            MoveSprites(collider.gameObject, container);
+                        }
+                        else
+                        {
+                            Debug.Log("Inventuriy is full");
+                        }
+
                     }
 
                 }
 
+
+            }
+            else if (collider.gameObject.GetComponent<ItemControl>().itemData.itemType == Items.ItemType.PermanentUsage)
+            {
+                collider.gameObject.GetComponent<ItemControl>().ApplayBuffs();
+                Destroy(collider.gameObject);
+                Debug.Log("***Permanent Usage item has been applayd.***");
+
             }
 
-
         }
-        else if (collider.gameObject.GetComponent<ItemControl>().itemData.itemType == Items.ItemType.PermanentUsage)
-        {
-            collider.gameObject.GetComponent<ItemControl>().ApplayBuffs();
-            Destroy(collider.gameObject);
-            Debug.Log("***Permanent Usage item has been applayd.***");
-
-        }
-        
-        */
     }
 
 

@@ -12,8 +12,10 @@ public class InterpolateStart : MonoBehaviour
 
             camera.GetComponent<CameraMenager>().trigerObject = this.gameObject;
             camera.GetComponent<CameraMenager>().loopNumber = 0;
-            camera.GetComponent<CameraMenager>().cameraMode = 2;
 
+            GameObject.Find("Player").GetComponent<PlayerMovement>().enabled = false;
+            camera.GetComponent<CameraMenager>().cameraMode = 2;
+           
             this.gameObject.SetActive(false);
             
 

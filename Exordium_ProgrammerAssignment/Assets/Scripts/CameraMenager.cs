@@ -7,7 +7,7 @@ public class CameraMenager : MonoBehaviour
     public Transform player;
     public float speed;
     public Vector3 offset;
-   
+
     //
     private Vector3 endPosition;
     private Vector3 startPosition;
@@ -15,16 +15,17 @@ public class CameraMenager : MonoBehaviour
     private float elapsedTime;
     public int loopNumber;
     private float stopTimeOnEndObject;
-
+    private bool stopExecution;
     //
     public GameObject trigerObject;
     public int cameraMode;
-    
+
     [Header("Add interpolate par")]
     public List<CameraInterpolateObjects> Objects;
-    
+
     void Start()
     {
+        stopExecution = false;
         cameraMode = 1;
     }
     void FixedUpdate()
@@ -32,12 +33,17 @@ public class CameraMenager : MonoBehaviour
         switch (cameraMode)
         {
             case 1:
-                FallowWithDeleyPlayer();
-                
-                break;               
+                FallowWithDeleyPlayer();               
+                break;
             case 2:
-                GoToObjectWithDeleyCamera();
-                break;          
+                StartInterpolate(trigerObject);              
+                break;
+            case 3:
+                if (stopExecution == false)
+                {
+                    GoToObjectWithDeleyCamera();
+                }
+                break;
             default:
                 FallowWithDeleyPlayer();
                 break;
@@ -55,30 +61,31 @@ public class CameraMenager : MonoBehaviour
     {
         elapsedTime += Time.deltaTime;
         float percentageComplate = elapsedTime / timeDelay;
-        transform.position = Vector3.Lerp(startPosition, endPosition, Mathf.SmoothStep(0, 1, percentageComplate));
-        /*if (percentageComplate < 1)
+        transform.position = Vector3.Lerp(startPosition, endPosition, Mathf.SmoothStep(0, 1, percentageComplate));        
+        if (transform.position == endPosition)
         {
-             transform.position = Vector3.Lerp(startPosition, endPosition, Mathf.SmoothStep(0, 1, percentageComplate));
+           StartCoroutine(Wait());
+            loopNumber = loopNumber + 1;
+            cameraMode = 2;
         }
-        else if(percentageComplate > 1)
-        {
-            float waitFor = elapsedTime / stopTimeOnEndObject;
-            if (waitFor > 1)
-            {
-                StartInterpolate(trigerObject);
-            }
-        }*/
     }
+
+   private IEnumerator Wait()
+    {
+        stopExecution = true;
+        yield return new WaitForSeconds(stopTimeOnEndObject);
+        stopExecution = false;
+    }
+
 
     private CameraInterpolateObjects FindObjectFromTriggerInterpolaten(GameObject triggerStart)
     {
-        Debug.Log(triggerStart.name);
-       for(int i=0;i< Objects.Count;i++)
+        for (int i = 0; i < Objects.Count; i++)
         {
             CameraInterpolateObjects interpObject = Objects[i];
-            for (int a=0; a< interpObject.triggerStart.Count; a++)
+            for (int a = 0; a < interpObject.triggerStart.Count; a++)
             {
-                if(interpObject.triggerStart[a] == triggerStart)
+                if (interpObject.triggerStart[a] == triggerStart)
                 {
                     return interpObject;
                 }
@@ -87,10 +94,10 @@ public class CameraMenager : MonoBehaviour
         return null;
     }
 
-    private List<Vector3> FindInterpolateVectors (CameraInterpolateObjects interpObject)
-    {      
-        List<Vector3> transforms = new List<Vector3>();
-        for ( int i=0; i< interpObject.endObject.Count; i++)
+    private List<Vector3> FindInterpolateVectors(CameraInterpolateObjects interpObject)
+    {
+        List<Vector3> transforms = new List<Vector3>();       
+        for (int i = 0; i < interpObject.endObject.Count; i++)
         {
             transforms.Add(interpObject.endObject[i].transform.position);
         }
@@ -101,24 +108,34 @@ public class CameraMenager : MonoBehaviour
     {
         List<Vector3> endVectors = new List<Vector3>();
         endVectors = FindInterpolateVectors(interpObject);
-
-        if (loopNumber > endVectors.Count)
+        if(loopNumber+1 > endVectors.Count+1)
+        {
+            player.GetComponent<PlayerMovement>().enabled = true;
+            cameraMode = 1;
+            
+        }
+        else if (loopNumber+1 == endVectors.Count+1)
         {
             startPosition = transform.position;
             endPosition = player.position + offset;
             timeDelay = interpObject.speedBetwenStartEndObjects;
-            stopTimeOnEndObject = 0;
+            stopTimeOnEndObject = 0; 
+            elapsedTime = 0;
+            cameraMode = 3;
         }
         else
         {
             for (int i = loopNumber; i < endVectors.Count; i++)
-            {              
+            {
                 if (i == 0)
                 {
                     startPosition = transform.position;
                     endPosition = endVectors[i] + offset;
                     timeDelay = interpObject.speedBetwenStartEndObjects;
                     stopTimeOnEndObject = interpObject.stopTimeOnEndObject;
+                    elapsedTime = 0;
+                    cameraMode = 3;
+                    break;
                 }
                 else
                 {
@@ -126,17 +143,20 @@ public class CameraMenager : MonoBehaviour
                     endPosition = endVectors[i] + offset;
                     timeDelay = interpObject.speedBetwenEndEndObjects;
                     stopTimeOnEndObject = interpObject.stopTimeOnEndObject;
+                    elapsedTime = 0;
+                    cameraMode = 3;
+                    break;
                 }
 
             }
-        }   
+        }
     }
 
-    private void StartInterpolate ( GameObject triggerStart)
-    {
-
-        Interpolate(FindObjectFromTriggerInterpolaten(triggerStart),loopNumber);
+    private void StartInterpolate(GameObject triggerStart)
+    {     
+        Interpolate(FindObjectFromTriggerInterpolaten(triggerStart), loopNumber);
         
-    }   
+    }
+
 
 }
