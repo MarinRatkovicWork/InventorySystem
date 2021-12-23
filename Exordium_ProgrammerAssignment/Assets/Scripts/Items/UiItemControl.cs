@@ -38,12 +38,14 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     private GameObject imageItem;
     private Vector2 ItemImagePosition;
-
-
+    private bool splitPossible;
+    public GameObject SplitScreen;
 
     void Start()
     {
-        ItemPreviewe.SetActive(false);       
+        ItemPreviewe.SetActive(false);
+        SplitScreen.SetActive(false);
+        
     }
 
     private bool fallowStart;
@@ -60,6 +62,67 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }*/
     }
 
+    public bool CheckIfSplitPossible(GameObject slot)
+    {
+        GameObject gameObjectContainer = slot.transform.Find("GameObjectContainer").gameObject;
+        if (gameObjectContainer.transform.childCount > 1)
+        {
+            return true;
+        }
+        return false;
+    }
+    
+
+    public void DisplayWarningSplit(bool diplayWarning)
+    {
+        GameObject warningSplit = SplitScreen.transform.Find("WarningSplit").gameObject;
+        if(diplayWarning == true)
+        {
+            warningSplit.SetActive(true);
+        }
+        if (diplayWarning == false)
+        {
+            warningSplit.SetActive(false);
+        }
+    }
+    public void UpdateSplitValueWithSlider()
+    {
+        GameObject splitBar = SplitScreen.transform.Find("SplitBar").gameObject;
+        GameObject moveStack = SplitScreen.transform.Find("MoveStack").gameObject;
+        moveStack.GetComponent<TMP_Text>().text = splitBar.GetComponent<Slider>().value.ToString();
+    }
+    private void TransferDataToSplitScreen(GameObject slot)
+    {
+       if( CheckIfSplitPossible(slot) == true)
+        {
+            DisplayWarningSplit(false);
+            GameObject imageHolder = SplitScreen.transform.Find("ImageHolder").gameObject;
+         GameObject imageStack = imageHolder.transform.Find("Image").gameObject;
+         GameObject imageSlot = slot.transform.Find("Image").gameObject;
+         imageStack.GetComponent<Image>().sprite = imageSlot.GetComponent<Image>().sprite;
+
+         GameObject stackMax = SplitScreen.transform.Find("StackMax").gameObject;
+         Debug.Log(stackMax.name);
+         GameObject gameObjectContainer = slot.transform.Find("GameObjectContainer").gameObject;
+         Debug.Log(gameObjectContainer.name);
+         stackMax.GetComponent<TMP_Text>().text = gameObjectContainer.transform.childCount.ToString();
+
+         GameObject splitBar = SplitScreen.transform.Find("SplitBar").gameObject;
+         splitBar.GetComponent<Slider>().maxValue = gameObjectContainer.transform.childCount;
+            SplitScreen.transform.position = slot.transform.position + new Vector3(-60,62,0);
+            
+        }
+        else
+        {
+            DisplayWarningSplit(true);
+         SplitScreen.transform.position = slot.transform.position + new Vector3(-60,62,0);
+        }
+
+        
+
+       
+
+    }
     private GameObject StartFallow(GameObject clickObjectFallow )
     {              
         GameObject CurentSlot = clickObjectFallow;
@@ -102,6 +165,7 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     }
     public void OnPointerClick(PointerEventData eventData)
     {
+        
 
         if (eventData.button == PointerEventData.InputButton.Right)
         {
@@ -116,11 +180,19 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         else if (Input.GetKey(KeyCode.Q) && eventData.button == PointerEventData.InputButton.Left)
         {
             Debug.Log("Radi");
+            
             DropToWorld(eventData.pointerPress.gameObject);
+
+        }
+        else if (Input.GetKey(KeyCode.R) && eventData.button == PointerEventData.InputButton.Left)
+        {
+            TransferDataToSplitScreen(eventData.pointerPress.gameObject);
+            SplitScreen.SetActive(true);
 
         }
         else if (eventData.button == PointerEventData.InputButton.Left)
         {
+            
             /*
             if (fallowStart == false)
             {
@@ -134,7 +206,7 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 clickObjectDrop = eventData.pointerPress.gameObject;
                 EndFallow(clickObjectFallow, clickObjectDrop, imageItem);
             }*/
-            
+
         }
     }
 
