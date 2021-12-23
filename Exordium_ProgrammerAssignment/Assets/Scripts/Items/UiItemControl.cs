@@ -31,6 +31,7 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public TMP_Text ItemDexterityText;
     public TMP_Text ItemAgilityText;
     public TMP_Text ItemIntelligenceText;
+    public TMP_Text ItemLuckText;
     public TMP_Text ItemManaMaxText;
     public TMP_Text ItemHealthMaxText;
     public TMP_Text ItemReplenishHealthText;
@@ -246,6 +247,7 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         ItemDexterityText.text = itemFound.GetComponent<ItemControl>().itemData.Dexterity.ToString();
         ItemAgilityText.text = itemFound.GetComponent<ItemControl>().itemData.Agility.ToString();
         ItemIntelligenceText.text = itemFound.GetComponent<ItemControl>().itemData.Intelligence.ToString();
+        ItemLuckText.text = itemFound.GetComponent<ItemControl>().itemData.Luck.ToString();
         ItemManaMaxText.text = itemFound.GetComponent<ItemControl>().itemData.PermanentManaIncrease.ToString();
         ItemHealthMaxText.text = itemFound.GetComponent<ItemControl>().itemData.PermanentHelthIncrease.ToString();
         ItemReplenishHealthText.text = itemFound.GetComponent<ItemControl>().itemData.ReplenishHelth.ToString();

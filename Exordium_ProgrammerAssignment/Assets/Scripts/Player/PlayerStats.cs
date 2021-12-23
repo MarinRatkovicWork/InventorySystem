@@ -24,6 +24,7 @@ public class PlayerStats : MonoBehaviour
     public Text DexterityText;
     public Text AgilityText;
     public Text IntelligenceText;
+    public Text LuckText;
     
     public Text StrenghtTextBonus;
     public Text DexterityTextBonus;
@@ -40,6 +41,7 @@ public class PlayerStats : MonoBehaviour
     public int Dexterity;
     public int Agility;
     public int Intelligence;
+    public int Luck;
 
     public int Attack;
     public int Defence;
@@ -73,6 +75,7 @@ public class PlayerStats : MonoBehaviour
      DexterityText.text= Dexterity.ToString();
      AgilityText.text = Agility.ToString();
      IntelligenceText.text = Intelligence.ToString();
+     LuckText.text = Luck.ToString();
    
      StrenghtTextBonus.text ="+"+ AtckBonus.ToString();      
      DexterityTextBonus.text = "+" + DfcBonus.ToString();       

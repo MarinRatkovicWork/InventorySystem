@@ -53,6 +53,7 @@ public class Items : ScriptableObject
     public int Dexterity;
     public int Agility;
     public int Intelligence;   
+    public int Luck;   
     public int Attack;
     public int Defence;
    

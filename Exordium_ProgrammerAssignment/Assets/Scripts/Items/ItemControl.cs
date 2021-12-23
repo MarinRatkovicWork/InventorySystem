@@ -27,6 +27,7 @@ public class ItemControl : MonoBehaviour
         PlayerStats.Dexterity = PlayerStats.Dexterity + itemData.Dexterity;
         PlayerStats.Agility = PlayerStats.Agility + itemData.Agility;
         PlayerStats.Intelligence = PlayerStats.Intelligence + itemData.Intelligence;
+        PlayerStats.Luck = PlayerStats.Luck + itemData.Luck;
 
         PlayerStats.Attack = PlayerStats.Attack + itemData.Attack;
         PlayerStats.Defence = PlayerStats.Defence + itemData.Defence;
@@ -45,6 +46,7 @@ public class ItemControl : MonoBehaviour
         PlayerStats.Dexterity = PlayerStats.Dexterity - itemData.Dexterity;
         PlayerStats.Agility = PlayerStats.Agility - itemData.Agility;
         PlayerStats.Intelligence = PlayerStats.Intelligence - itemData.Intelligence;
+        PlayerStats.Luck = PlayerStats.Luck + itemData.Luck;
 
         PlayerStats.Attack = PlayerStats.Attack - itemData.Attack;
         PlayerStats.Defence = PlayerStats.Defence - itemData.Defence;

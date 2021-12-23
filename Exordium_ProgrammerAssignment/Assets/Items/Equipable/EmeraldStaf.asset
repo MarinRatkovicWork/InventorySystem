@@ -27,5 +27,6 @@ MonoBehaviour:
   Dexterity: 0
   Agility: -1
   Intelligence: 5
+  Luck: 10
   Attack: 60
   Defence: 10
