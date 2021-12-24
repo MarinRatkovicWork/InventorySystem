@@ -49,6 +49,8 @@ public class Items : ScriptableObject
     public int ReplenishMana;
     public int ReplenishHelth;
 
+    public int Durability;
+
     public int Strenght;
     public int Dexterity;
     public int Agility;
@@ -56,8 +58,9 @@ public class Items : ScriptableObject
     public int Luck;   
     public int Attack;
     public int Defence;
-   
-   
+           
+
+
 
 
 

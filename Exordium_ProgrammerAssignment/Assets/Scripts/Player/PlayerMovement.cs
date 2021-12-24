@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +11,21 @@ public class PlayerMovement : MonoBehaviour
     public Animator animator;
     Vector2 movement;
 
+
+    GameObject player;
+    Vector3 startPosition;
+    Vector3 endPosition;
+    Vector3 currentPosition;
+    private float totalDistance;
+    public int totalDistanceInt;
+
+    void Start()
+    {
+        startPosition = gameObject.transform.position;
+        currentPosition = gameObject.transform.position;
+        endPosition = gameObject.transform.position;
+        totalDistance = 0;
+    }
     void Update()
     {
         movement.x = Input.GetAxis("Horizontal");
@@ -22,6 +38,28 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        
         Rb.MovePosition(Rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        currentPosition = gameObject.transform.position;
+        PlayerWallkingDistence();
+        totalDistanceInt = System.Convert.ToInt32(totalDistance);
+        
+
+    }
+
+    public float PlayerWallkingDistence()
+    {
+     
+
+        if (startPosition != currentPosition)        
+        {
+            
+            endPosition = currentPosition;           
+            totalDistance = totalDistance + Vector3.Distance(startPosition, endPosition);
+            startPosition = currentPosition;
+        }
+
+        
+        return totalDistance;
     }
 }

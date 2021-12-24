@@ -37,30 +37,53 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public TMP_Text ItemReplenishHealthText;
     public TMP_Text ItemReaplenishManaText;
 
+    public GameObject ItemDurabilityText;
+    public GameObject DurabilityBar;
+
     private GameObject imageItem;
     private Vector2 ItemImagePosition;
     private bool splitPossible;
     public GameObject SplitScreen;
 
-    void Start()
-    {
-        ItemPreviewe.SetActive(false);
-        SplitScreen.SetActive(false);
-        
-    }
+   
 
     private bool fallowStart;
     private GameObject clickObjectFallow;
     private GameObject clickObjectDrop;
     private GameObject fallowImage;
     private Transform fallowImagePosition;
+
+    private GameObject pointerEnterData;
+
+    void Start()
+    {
+        ItemPreviewe.SetActive(false);
+        SplitScreen.SetActive(false);
+    }
     void Update()
     {
         /*
         if(fallowStart == true)
         {
             fallowImage.transform.position = Input.mousePosition;
+        
         }*/
+
+        if (pointerEnterData != null) {
+            GameObjectContainer = pointerEnterData.transform.Find("GameObjectContainer").gameObject;
+            if (GameObjectContainer.transform.childCount > 0)
+            {
+                ItemFound = GameObjectContainer.transform.GetChild(0).gameObject;
+                ItemDurabilityText.SetActive(true);
+                ItemDurabilityText.GetComponent<TMP_Text>().text = ItemFound.GetComponent<ItemControl>().currentDurability.ToString();
+                DurabilityBar.GetComponent<Slider>().maxValue = ItemFound.GetComponent<ItemControl>().itemData.Durability;
+                DurabilityBar.GetComponent<Slider>().value = ItemFound.GetComponent<ItemControl>().currentDurability;
+            }
+
+            
+        }
+        
+        
     }
 
     public bool CheckIfSplitPossible(GameObject slot)
@@ -213,14 +236,17 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        
         if (DropToWorldPanel != eventData.pointerEnter.gameObject)
         {
+            pointerEnterData = eventData.pointerEnter.gameObject;
             GetItemData(eventData.pointerEnter.transform.gameObject);
         }
 
     }
     public void OnPointerExit(PointerEventData eventData)
     {
+        pointerEnterData = null;
         ItemPreviewe.SetActive(false);
     }
     private void GetItemData(GameObject Item)
@@ -252,7 +278,12 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         ItemHealthMaxText.text = itemFound.GetComponent<ItemControl>().itemData.PermanentHelthIncrease.ToString();
         ItemReplenishHealthText.text = itemFound.GetComponent<ItemControl>().itemData.ReplenishHelth.ToString();
         ItemReaplenishManaText.text = itemFound.GetComponent<ItemControl>().itemData.ReplenishMana.ToString();
-    }
+         ItemDurabilityText.SetActive(true);
+         ItemDurabilityText.GetComponent<TMP_Text>().text = itemFound.GetComponent<ItemControl>().currentDurability.ToString() ;         
+         DurabilityBar.GetComponent<Slider>().maxValue = itemFound.GetComponent<ItemControl>().itemData.Durability;
+         DurabilityBar.GetComponent<Slider>().value = itemFound.GetComponent<ItemControl>().currentDurability;
+
+}
 
     public void OnBeginDrag(PointerEventData data)
     {
@@ -351,13 +382,14 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                     SwapSpritesSlotToSlot(startSwap, endSwap);
                     itemStart.GetComponent<ItemControl>().ApplayBuffs();
                     itemEnd.GetComponent<ItemControl>().RemoveBuffs();
-                }
+                                 }
                 else
                 {
                   
                     itemStart.transform.parent = gameObjectContainerEnd.transform;
                     SwapSpritesSlotToSlot(startSwap, endSwap);
                     itemStart.GetComponent<ItemControl>().ApplayBuffs();
+                   
                 }
             }
             else if (endSwap.transform.parent.name == "ItemSlotContanier")
@@ -372,6 +404,7 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                         SwapSpritesSlotToSlot(startSwap, endSwap);
                         itemStart.GetComponent<ItemControl>().ApplayBuffs();
                         itemEnd.GetComponent<ItemControl>().RemoveBuffs();
+                       
                     }
                 }
                 else
@@ -380,6 +413,7 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                     itemStart.transform.parent = gameObjectContainerEnd.transform;
                     SwapSpritesSlotToSlot(startSwap, endSwap);
                     itemStart.GetComponent<ItemControl>().RemoveBuffs();
+                   
                 }
             }
             else
@@ -457,7 +491,7 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         else if (endSwap.transform.parent.name == EqupmentSlots.name || startSwap.transform.parent.name == EqupmentSlots.name)
         {
             SwapItemsSlotToEqupment(startSwap, endSwap);           
-            Debug.Log("2");
+
         }
         else
         {
@@ -509,10 +543,7 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
 
 
-    }
-    
-    
-
+    }    
     private void SwopEqupmentOnRightClik(PointerEventData data)
     {
         GameObject ItemToPlace = data.pointerPress.gameObject;

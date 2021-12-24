@@ -23,9 +23,11 @@ MonoBehaviour:
   PermanentHelthIncrease: 10
   ReplenishMana: 0
   ReplenishHelth: 0
+  Durability: 20
   Strenght: 1
   Dexterity: 4
   Agility: -1
   Intelligence: 5
+  Luck: 0
   Attack: 0
   Defence: 0

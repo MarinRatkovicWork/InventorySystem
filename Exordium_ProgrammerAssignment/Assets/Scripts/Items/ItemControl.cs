@@ -8,13 +8,19 @@ public class ItemControl : MonoBehaviour
     public Items itemData;
     public GameObject Player;
     private PlayerStats PlayerStats;
+    public int currentDurability;
 
+    
+   
 
     public void Start()
     {       
         gameObject.GetComponent<SpriteRenderer>().sprite = itemData.Artwork;   
         PlayerStats = Player.GetComponent<PlayerStats>();
+        currentDurability = itemData.Durability;
     }
+   
+
     public void ApplayBuffs()
     {
         PlayerStats.CurentHelth = PlayerStats.CurentHelth + itemData.ReplenishHelth;
