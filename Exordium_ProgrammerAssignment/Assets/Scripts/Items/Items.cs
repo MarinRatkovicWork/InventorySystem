@@ -37,6 +37,7 @@ public class Items : ScriptableObject
         Wepon,
         Shild,
         Boots,
+        Ring,
     } 
     public Equpment equpment;
   

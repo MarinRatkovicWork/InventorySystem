@@ -10,10 +10,6 @@ public class DurabilityHandler : MonoBehaviour
     public GameObject ItemPreviewe;
     public GameObject Player;
 
-    public GameObject ItemDurabilityText;
-    public GameObject ItemNameText;
-    public GameObject DurabilityBar;
-
     private int totalDistance;
     private int startDistance;
     List<GameObject> itemsInEqupment;
@@ -63,22 +59,10 @@ public class DurabilityHandler : MonoBehaviour
                 for (int i = 0; i < itemsInEqupment.Count; i++)
                 {
                     GameObject item = itemsInEqupment[i];
-                    item.GetComponent<ItemControl>().currentDurability = item.GetComponent<ItemControl>().currentDurability - 1;
-                    Debug.Log("Item Name: " + item.GetComponent<ItemControl>().itemData.name);
-                    Debug.Log("Item max dur: " + item.GetComponent<ItemControl>().itemData.Durability);
-                    Debug.Log("Item curent dur: " + item.GetComponent<ItemControl>().currentDurability);
-                  /*
-                    if (ItemPreviewe.active == true )
-                     {
-                        ItemDurabilityText.SetActive(true);
-                        ItemDurabilityText.GetComponent<TMP_Text>().text = item.GetComponent<ItemControl>().currentDurability.ToString();
-                        DurabilityBar.GetComponent<Slider>().maxValue = item.GetComponent<ItemControl>().itemData.Durability;
-                        DurabilityBar.GetComponent<Slider>().value = item.GetComponent<ItemControl>().currentDurability;
-                    }*/
+                    item.GetComponent<ItemControl>().currentDurability = item.GetComponent<ItemControl>().currentDurability - 1;                                 
                     if (item.GetComponent<ItemControl>().currentDurability == 0)
                     {
 
-                        Debug.Log("ItemDestrojd:");
                         GameObject firstParant = item.transform.parent.gameObject;
                         GameObject lastParant = firstParant.transform.parent.gameObject;
                         GameObject image = lastParant.transform.Find("Image").gameObject;

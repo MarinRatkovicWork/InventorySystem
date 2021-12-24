@@ -24,34 +24,50 @@ public class Player : MonoBehaviour
         }
     }
 
-    private string ReturnSlotName(Items.Equpment itemsEqupment)
+    private List<string> ReturnSlotName(Items.Equpment itemsEqupment)
     {
-        string slotName;
+       List<string> slotNames = new List<string>();
+       string slotName;
+        int numberOfSlots;
         if (itemsEqupment == Items.Equpment.Hed)
         {
             slotName = "HeadSlot";
+            slotNames.Add(slotName);
+
         }
         else if (itemsEqupment == Items.Equpment.Torso)
         {
             slotName = "TorsoSlot";
+            slotNames.Add(slotName);
         }
         else if (itemsEqupment == Items.Equpment.Boots)
         {
             slotName = "BootsSlot";
+            slotNames.Add(slotName);
         }
         else if (itemsEqupment == Items.Equpment.Shild)
         {
             slotName = "ShildSlot";
+            slotNames.Add(slotName);
         }
         else if (itemsEqupment == Items.Equpment.Wepon)
         {
             slotName = "WeaponSlot";
+            slotNames.Add(slotName);
+        }
+        else if (itemsEqupment == Items.Equpment.Ring)
+        {
+            slotName = "RightRingSlot";
+            slotNames.Add(slotName);
+            slotName = "LeftRingSlot";
+            slotNames.Add(slotName);
         }
         else
         {
             slotName = "";
-        }
-        return slotName;
+            slotNames.Add(slotName);
+        }       
+        return slotNames;
     }
 
     private (bool itemEquipped, GameObject gameObjectContainer) CheckIfItemTypeIsAlreadyEquipped(GameObject compareWith)
@@ -63,22 +79,28 @@ public class Player : MonoBehaviour
         }
         for (int a = 0; a < EquipmentSlot.Count; a++)
         {
-            if (EquipmentSlot[a].name == ReturnSlotName(compareWith.GetComponent<ItemControl>().itemData.equpment))
+            List<string> slotNams = ReturnSlotName(compareWith.GetComponent<ItemControl>().itemData.equpment);
+            for (int i = 0; i < slotNams.Count; i++)
             {
-               GameObject GameObjectContainerEquipment = EquipmentSlot[a].transform.Find("GameObjectContainer").gameObject;
-                if (GameObjectContainerEquipment.transform.childCount == 0)
+
+                if (EquipmentSlot[a].name == slotNams[i])
                 {
+                    GameObject GameObjectContainerEquipment = EquipmentSlot[a].transform.Find("GameObjectContainer").gameObject;
+                    if (GameObjectContainerEquipment.transform.childCount == 0)
+                    {
 
-                    return (false, GameObjectContainerEquipment);
-
+                        return (false, GameObjectContainerEquipment);
+                    }
+                   
                 }
 
             }
+            
+
         }
         return (true, null);
 
     }
-
     private void MoveTransformItem(GameObject startPosition, GameObject endPosition)
     {
         startPosition.transform.parent = endPosition.transform;
