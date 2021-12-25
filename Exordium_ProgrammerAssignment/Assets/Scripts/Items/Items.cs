@@ -38,28 +38,43 @@ public class Items : ScriptableObject
         Shild,
         Boots,
         Ring,
+        
     } 
     public Equpment equpment;
-  
-    public string ItameName;
-    public int amount;  
-    public Sprite Artwork;
+    
+    public enum ConsumptionType
+    {
+        AddBonusesDirectly,
+        HoldBonusValueOverTime,
+        RampValueUpAndDownOverTime,
+        ChangeValueOverTimeInTickManner,
 
+    } 
+    
+    public ConsumptionType consumptionType;
+    [Space]
+    public string ItameName;
+    public Sprite Artwork;
+    public int Durability;
+    [Header("ConsumptionPerTime")]
+   
+    public float itemBonusDuration;  
+    public float itemApplayBonusOverTime;   
+    [Header("Bonus to stats")]
     public int PermanentManaIncrease;
     public int PermanentHelthIncrease;
-    public int ReplenishMana;
-    public int ReplenishHelth;
-
-    public int Durability;
-
+     [Space]
+    
     public int Strenght;
     public int Dexterity;
     public int Agility;
     public int Intelligence;   
-    public int Luck;   
+    public int Luck;
+    [Space]
     public int Attack;
     public int Defence;
-           
+    public int ReplenishMana;
+    public int ReplenishHelth;        
 
 
 

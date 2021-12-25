@@ -9,6 +9,8 @@ using TMPro;
 
 public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler
 {
+    public GameObject ActiveBuffHolder;
+    
     private GameObject GameObjectContainer;
 
     public GameObject ItemPreviewe;
@@ -665,20 +667,40 @@ public class UiItemControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 GameObject ItemConsume = GameObjectContainerConsume.transform.GetChild(0).gameObject;
                 if (ItemConsume.GetComponent<ItemControl>().itemData.usageType == Items.UsageType.Consumable)
                 {
-                    ItemConsume.GetComponent<ItemControl>().ApplayBuffs();
-
-                    if (GameObjectContainerConsume.transform.childCount == 1)
+                    List<GameObject> BuffSlots = new List<GameObject>();
+                    for(int i = 0; i < ActiveBuffHolder.transform.childCount; i++)
                     {
-                        GameObject Image = ItemToConsumeStart.transform.Find("Image").gameObject;
-                        Image.GetComponent<Image>().sprite = null;
-                        Destroy(ItemConsume);
+                        BuffSlots.Add(ActiveBuffHolder.transform.GetChild(i).gameObject);
+                    }
 
-                    }
-                    else
+                    foreach(GameObject slot in BuffSlots)
                     {
-                        Destroy(ItemConsume);
-                        UpdateNuberOfItemInSlot(ItemToConsumeStart, true);
+                        if(slot.transform.childCount == 0)
+                        {
+                            if (ItemConsume.GetComponent<ItemControl>().itemData.consumptionType == Items.ConsumptionType.AddBonusesDirectly)
+                            {
+                                ItemConsume.GetComponent<ItemControl>().ApplayBuffs();
+                                if (GameObjectContainerConsume.transform.childCount == 0)
+                                {
+                                    GameObject Image = ItemToConsumeStart.transform.Find("Image").gameObject;
+                                    Image.GetComponent<Image>().sprite = null;
+                                }
+                                break;
+                            }
+                            else
+                            {
+                                ItemConsume.transform.parent = slot.transform;
+                                UpdateNuberOfItemInSlot(ItemToConsumeStart, true);
+                                if (GameObjectContainerConsume.transform.childCount == 0)
+                                {
+                                    GameObject Image = ItemToConsumeStart.transform.Find("Image").gameObject;
+                                    Image.GetComponent<Image>().sprite = null;
+                                }
+                                break;
+                            }
+                        }
                     }
+                  
 
                 }
             }

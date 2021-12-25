@@ -177,7 +177,7 @@ public class Player : MonoBehaviour
         {
             if (collider.gameObject.GetComponent<ItemControl>().itemData.itemType == Items.ItemType.PickUpAble)
             {
-                if (CheckIfItemTypeIsAlreadyEquipped(collider.gameObject).itemEquipped == false)
+                if (CheckIfItemTypeIsAlreadyEquipped(collider.gameObject).itemEquipped == false && collider.gameObject.GetComponent<ItemControl>().itemData.usageType == Items.UsageType.Equpment)
                 {
                     GameObject container = CheckIfItemTypeIsAlreadyEquipped(collider.gameObject).gameObjectContainer;
                     MoveTransformItem(collider.gameObject, container);

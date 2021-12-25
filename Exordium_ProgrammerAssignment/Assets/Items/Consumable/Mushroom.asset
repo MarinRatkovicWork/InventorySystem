@@ -16,16 +16,20 @@ MonoBehaviour:
   usageType: 0
   stackable: 1
   equpment: 0
+  consumptionType: 2
   ItameName: Mushroom
-  amount: 1
   Artwork: {fileID: 21300000, guid: 966ff550585ec504896a28b55fd7281c, type: 3}
-  PermanentManaIncrease: 0
-  PermanentHelthIncrease: 0
-  ReplenishMana: -300
-  ReplenishHelth: -300
-  Strenght: 2
-  Dexterity: 0
-  Agility: 0
-  Intelligence: 4
-  Attack: 0
-  Defence: 0
+  Durability: 0
+  itemBonusDuration: 5
+  itemApplayBonusOverTime: 5
+  PermanentManaIncrease: 25
+  PermanentHelthIncrease: 25
+  Strenght: 25
+  Dexterity: 25
+  Agility: 25
+  Intelligence: 25
+  Luck: 25
+  Attack: 25
+  Defence: 25
+  ReplenishMana: 25
+  ReplenishHelth: 25
