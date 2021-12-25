@@ -168,7 +168,6 @@ public class BuffHandler : MonoBehaviour
     private void BonuseMode4()
     {
         elapsedTime += Time.deltaTime;
-        timePased += Time.deltaTime;
         float timeHold = itemData.itemBonusDuration; 
         float timeToMax = itemData.itemApplayBonusOverTime;       
         float combaindTime = timeHold + timeToMax;      
@@ -177,75 +176,61 @@ public class BuffHandler : MonoBehaviour
         Debug.Log("Combo"+combaindTime);
         Debug.Log("Past    " +timePased);
         buffSlotImage.fillAmount = buffSlotImage.fillAmount- percentageComplate;
-        if (elapsedTime >= 1f)
+        if (elapsedTime <= timeToMax)
         {
-            
-            timeStop1 = timeStop1+1;
-            Debug.Log("timeStop1: " + timeStop1);
-            if (timeStop1 <= System.Convert.ToInt32(timeToMax))
-            {
-                PlayerStats.CurentHelth = RampValueUpAndDownOverTime(PlayerStats.CurentHelth, itemData.ReplenishHelth, timeToMax, timeStop1);
-                PlayerStats.CurentMana = RampValueUpAndDownOverTime(PlayerStats.CurentMana, itemData.ReplenishMana, timeToMax, timeStop1);
-                PlayerStats.MaxHelth = RampValueUpAndDownOverTime(PlayerStats.MaxHelth, itemData.PermanentHelthIncrease, timeToMax, timeStop1);
-                PlayerStats.MaxMana = RampValueUpAndDownOverTime(PlayerStats.MaxMana, itemData.PermanentManaIncrease, timeToMax, timeStop1);
-                PlayerStats.Strenght = RampValueUpAndDownOverTime(PlayerStats.Strenght, itemData.Strenght, timeToMax, timeStop1);
-                PlayerStats.Dexterity = RampValueUpAndDownOverTime(PlayerStats.Dexterity, itemData.Dexterity, timeToMax, timeStop1);
-                PlayerStats.Agility = RampValueUpAndDownOverTime(PlayerStats.Agility, itemData.Agility, timeToMax, timeStop1);
-                PlayerStats.Intelligence = RampValueUpAndDownOverTime(PlayerStats.Intelligence, itemData.Intelligence, timeToMax, timeStop1);
-                PlayerStats.Luck = RampValueUpAndDownOverTime(PlayerStats.Luck, itemData.Luck, timeToMax, timeStop1);
-                PlayerStats.Attack = RampValueUpAndDownOverTime(PlayerStats.Attack, itemData.Attack, timeToMax, timeStop1);
-                PlayerStats.Defence = RampValueUpAndDownOverTime(PlayerStats.Defence, itemData.Defence, timeToMax, timeStop1);
-                PlayerStats.UpdateStats();
-            }
-            else if(timeStop1 > System.Convert.ToInt32(timeToMax))
-            {
-                timeStop2 = timeStop2+1;
-                Debug.Log("timeStop2: " + timeStop2);
-                if(timeStop2 == System.Convert.ToInt32(timeHold)) 
-                {
-                    
-                    PlayerStats.CurentHelth = RampValueUpAndDownOverTime(PlayerStats.CurentHelth, -itemData.ReplenishHelth, timeToMax, timeStop1);
-                    PlayerStats.CurentMana = RampValueUpAndDownOverTime(PlayerStats.CurentMana, -itemData.ReplenishMana, timeToMax, timeStop1);
-                    PlayerStats.MaxHelth = RampValueUpAndDownOverTime(PlayerStats.MaxHelth, -itemData.PermanentHelthIncrease, timeToMax, timeStop1);
-                    PlayerStats.MaxMana = RampValueUpAndDownOverTime(PlayerStats.MaxMana, -itemData.PermanentManaIncrease, timeToMax, timeStop1);
-                    PlayerStats.Strenght = RampValueUpAndDownOverTime(PlayerStats.Strenght, -itemData.Strenght, timeToMax, timeStop1);
-                    PlayerStats.Dexterity = RampValueUpAndDownOverTime(PlayerStats.Dexterity, -itemData.Dexterity, timeToMax, timeStop1);
-                    PlayerStats.Agility = RampValueUpAndDownOverTime(PlayerStats.Agility, -itemData.Agility, timeToMax, timeStop1);
-                    PlayerStats.Intelligence = RampValueUpAndDownOverTime(PlayerStats.Intelligence, -itemData.Intelligence, timeToMax, timeStop1);
-                    PlayerStats.Luck = RampValueUpAndDownOverTime(PlayerStats.Luck, -itemData.Luck, timeToMax, timeStop1);
-                    PlayerStats.Attack = RampValueUpAndDownOverTime(PlayerStats.Attack, -itemData.Attack, timeToMax, timeStop1);
-                    PlayerStats.Defence = RampValueUpAndDownOverTime(PlayerStats.Defence, -itemData.Defence, timeToMax, timeStop1);
-                    PlayerStats.UpdateStats();
-                    elapsedTime = 0;
-                    childFound = false;
-                    Destroy(item);
-                    startBonusMode = 1;
-                    
-                    
-                }
 
-            }
-            
+            PlayerStats.CurentHelth = RampValueUpAndDownOverTime(PlayerStats.CurentHelth, itemData.ReplenishHelth, timeToMax, elapsedTime);
+            PlayerStats.CurentMana = RampValueUpAndDownOverTime(PlayerStats.CurentMana, itemData.ReplenishMana, timeToMax, elapsedTime);
+            PlayerStats.MaxHelth = RampValueUpAndDownOverTime(PlayerStats.MaxHelth, itemData.PermanentHelthIncrease, timeToMax, elapsedTime);
+            PlayerStats.MaxMana = RampValueUpAndDownOverTime(PlayerStats.MaxMana, itemData.PermanentManaIncrease, timeToMax, elapsedTime);
+            PlayerStats.Strenght = RampValueUpAndDownOverTime(PlayerStats.Strenght, itemData.Strenght, timeToMax, elapsedTime);
+            PlayerStats.Dexterity = RampValueUpAndDownOverTime(PlayerStats.Dexterity, itemData.Dexterity, timeToMax, elapsedTime);
+            PlayerStats.Agility = RampValueUpAndDownOverTime(PlayerStats.Agility, itemData.Agility, timeToMax, elapsedTime);
+            PlayerStats.Intelligence = RampValueUpAndDownOverTime(PlayerStats.Intelligence, itemData.Intelligence, timeToMax, elapsedTime);
+            PlayerStats.Luck = RampValueUpAndDownOverTime(PlayerStats.Luck, itemData.Luck, timeToMax, elapsedTime);
+            PlayerStats.Attack = RampValueUpAndDownOverTime(PlayerStats.Attack, itemData.Attack, timeToMax, elapsedTime);
+            PlayerStats.Defence = RampValueUpAndDownOverTime(PlayerStats.Defence, itemData.Defence, timeToMax, elapsedTime);
+            PlayerStats.UpdateStats();
+        }
+        else if (elapsedTime >= combaindTime)
+        {
+            PlayerStats.CurentHelth = RampValueUpAndDownOverTime(PlayerStats.CurentHelth, -itemData.ReplenishHelth, timeToMax, elapsedTime);
+            PlayerStats.CurentMana = RampValueUpAndDownOverTime(PlayerStats.CurentMana, -itemData.ReplenishMana, timeToMax, elapsedTime);
+            PlayerStats.MaxHelth = RampValueUpAndDownOverTime(PlayerStats.MaxHelth, -itemData.PermanentHelthIncrease, timeToMax, elapsedTime);
+            PlayerStats.MaxMana = RampValueUpAndDownOverTime(PlayerStats.MaxMana, -itemData.PermanentManaIncrease, timeToMax, elapsedTime);
+            PlayerStats.Strenght = RampValueUpAndDownOverTime(PlayerStats.Strenght, -itemData.Strenght, timeToMax, elapsedTime);
+            PlayerStats.Dexterity = RampValueUpAndDownOverTime(PlayerStats.Dexterity, -itemData.Dexterity, timeToMax, elapsedTime);
+            PlayerStats.Agility = RampValueUpAndDownOverTime(PlayerStats.Agility, -itemData.Agility, timeToMax, elapsedTime);
+            PlayerStats.Intelligence = RampValueUpAndDownOverTime(PlayerStats.Intelligence, -itemData.Intelligence, timeToMax, elapsedTime);
+            PlayerStats.Luck = RampValueUpAndDownOverTime(PlayerStats.Luck, -itemData.Luck, timeToMax, elapsedTime);
+            PlayerStats.Attack = RampValueUpAndDownOverTime(PlayerStats.Attack, -itemData.Attack, timeToMax, elapsedTime);
+            PlayerStats.Defence = RampValueUpAndDownOverTime(PlayerStats.Defence, -itemData.Defence, timeToMax, elapsedTime);
+            PlayerStats.UpdateStats();
             elapsedTime = 0;
-        }        
+            childFound = false;
+            Destroy(item);
+            startBonusMode = 1;
+        }
+        
+
+             
     }
-    private int RampValueUpAndDownOverTime(int current, int increse, float timeToMax,int seconds)
+    private int RampValueUpAndDownOverTime(int current, int increse, float timeToMax,float seconds)
     {
 
         if (increse != 0)
-        {
-            int time = System.Convert.ToInt32(timeToMax);
-            int returnValue = current;
-            int amountToAdd = increse / time;
-            int remainderToAdd = increse % time;
-            if (time < seconds)
+        {           
+            float returnValue = current;
+            float amountToAdd = increse / timeToMax;          
+            if (timeToMax <= seconds)
             {
-                return current = current + amountToAdd;
-            }else if(time == seconds)
-            {
-                return current = current + remainderToAdd;
+                return current = current + System.Convert.ToInt32(amountToAdd);
             }
-            return current;
+            else
+            {
+                return current+increse;
+            }
+            
         }
         return current;
     }
